@@ -1,0 +1,78 @@
+﻿@model BitirmeProjesi.Models.Profile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Profile</h4>
+
+    @ViewBag.Message
+    @ViewBag.Message2
+    <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
+        <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
+        <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.ProfileId })" alt="AvatarImg" class="avatar">
+
+        @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
+        {
+
+
+            <div class="input-group mb-3 ">
+                <div class="input-group-prepend">
+                    <input type="submit" value="Upload Avatar" class="btn btn-outline-secondary" />
+                </div>
+                <div class="custom-file">
+                    <input type="file" name="Avatar" id="_AvatarUpload" class="custom-file-input" />
+                    <label class="custom-file-label" for="_AvatarUpload">Choose a File</label>
+                </div>
+            </div>
+           
+        }
+
+    </div>
+
+
+    <div id="PostProfile" class="container" >
+        @using (Html.BeginForm("PostProfile", "Profile", new { post = Model.User.Posts }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+
+
+        }
+
+
+    </div>
+
+
+    </div>
+
+    @if (Request.IsAuthenticated)//Bak bu ne diye
+    {
+        using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" }))
+        {
+            <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+            }
+
+        }
+
+
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ProfileId }) |
+
+    </p>
+
+
+    @section Scripts
+{
+
+
+
+
+
+
+
+
+
+    }
