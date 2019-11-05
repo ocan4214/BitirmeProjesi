@@ -41,7 +41,8 @@ namespace BitirmeProjesi.Controllers
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
 
             var currentUser = db.Users.Where(a => a.Email == User.Identity.Name).FirstOrDefault();
-            
+
+           
             if (currentUser.Profile.ProfileId == id)
             { 
                 if (ModelState.IsValid)
