@@ -5,16 +5,17 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="d6751b4d7f1c4515a96c744833607719" Name="Diagram1">
-        <EntityTypeShape EntityType="LogRegDBModel.Post" Width="1.5" PointX="4.5" PointY="1" />
+        <EntityTypeShape EntityType="LogRegDBModel.Post" Width="1.5" PointX="5.25" PointY="0.625" />
         <EntityTypeShape EntityType="LogRegDBModel.User" Width="1.5" PointX="0.75" PointY="1" />
         <AssociationConnector Association="LogRegDBModel.FK_UserPost" />
-        <EntityTypeShape EntityType="LogRegDBModel.Friend" Width="1.5" PointX="1.125" PointY="4.875" IsExpanded="true" />
-        <AssociationConnector Association="LogRegDBModel.FriendPost" />
-        <AssociationConnector Association="LogRegDBModel.FriendUser" />
         <EntityTypeShape EntityType="LogRegDBModel.Role" Width="1.5" PointX="10" PointY="2.5" IsExpanded="true" />
         <AssociationConnector Association="LogRegDBModel.RoleUser" />
         <EntityTypeShape EntityType="LogRegDBModel.Profile" Width="1.5" PointX="2.625" PointY="1" />
         <AssociationConnector Association="LogRegDBModel.ProfileUser" />
+        <EntityTypeShape EntityType="LogRegDBModel.UploadFile" Width="1.5" PointX="7.625" PointY="0.75" />
+        <AssociationConnector Association="LogRegDBModel.UploadFilePost" />
+        <EntityTypeShape EntityType="LogRegDBModel.Friend" Width="1.5" PointX="3.375" PointY="4.875" />
+        <AssociationConnector Association="LogRegDBModel.FriendUser" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

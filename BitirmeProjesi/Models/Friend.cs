@@ -17,7 +17,6 @@ namespace BitirmeProjesi.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Friend()
         {
-            this.Posts = new HashSet<Post>();
             this.Users = new HashSet<User>();
         }
     
@@ -27,8 +26,6 @@ namespace BitirmeProjesi.Models
         public System.DateTime DateOfBirth { get; set; }
         public System.DateTime FriendAddDate { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Post> Posts { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
     }

@@ -27,8 +27,9 @@ namespace BitirmeProjesi.Models
     
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Friend> Friends { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }
+        public virtual DbSet<UploadFile> UploadFiles { get; set; }
+        public virtual DbSet<Friend> Friends { get; set; }
     }
 }
