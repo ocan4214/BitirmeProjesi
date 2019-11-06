@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 10/27/2019 18:22:59
+-- Date Created: 11/06/2019 19:25:45
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -17,17 +17,14 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_UserPost]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Posts] DROP CONSTRAINT [FK_UserPost];
-GO
-IF OBJECT_ID(N'[dbo].[FK_FriendPost]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Posts] DROP CONSTRAINT [FK_FriendPost];
-GO
 IF OBJECT_ID(N'[dbo].[FK_FriendUser_Friend]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_Friend];
 GO
 IF OBJECT_ID(N'[dbo].[FK_FriendUser_User]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_User];
+GO
+IF OBJECT_ID(N'[dbo].[FK_ProfileUser]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Profiles] DROP CONSTRAINT [FK_ProfileUser];
 GO
 IF OBJECT_ID(N'[dbo].[FK_RoleUser_Role]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RoleUser] DROP CONSTRAINT [FK_RoleUser_Role];
@@ -35,34 +32,40 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_RoleUser_User]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RoleUser] DROP CONSTRAINT [FK_RoleUser_User];
 GO
-IF OBJECT_ID(N'[dbo].[FK_ProfileUser]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Profiles] DROP CONSTRAINT [FK_ProfileUser];
+IF OBJECT_ID(N'[dbo].[FK_UploadFilePost]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[UploadFiles] DROP CONSTRAINT [FK_UploadFilePost];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserPost]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Posts] DROP CONSTRAINT [FK_UserPost];
 GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Posts]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Posts];
-GO
-IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Users];
-GO
 IF OBJECT_ID(N'[dbo].[Friends]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Friends];
-GO
-IF OBJECT_ID(N'[dbo].[Roles]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Roles];
-GO
-IF OBJECT_ID(N'[dbo].[Profiles]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Profiles];
 GO
 IF OBJECT_ID(N'[dbo].[FriendUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[FriendUser];
 GO
+IF OBJECT_ID(N'[dbo].[Posts]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Posts];
+GO
+IF OBJECT_ID(N'[dbo].[Profiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Profiles];
+GO
+IF OBJECT_ID(N'[dbo].[Roles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Roles];
+GO
 IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RoleUser];
+GO
+IF OBJECT_ID(N'[dbo].[UploadFiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[UploadFiles];
+GO
+IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Users];
 GO
 
 -- --------------------------------------------------
@@ -73,14 +76,11 @@ GO
 CREATE TABLE [dbo].[Posts] (
     [PostId] int IDENTITY(1,1) NOT NULL,
     [DateofPost] datetime  NOT NULL,
-    [UploadedFile] varbinary(max)  NULL,
     [UserMentions] nvarchar(max)  NULL,
     [UserId] int  NOT NULL,
     [ContentofPost] nvarchar(max)  NULL,
     [Likes] int  NULL,
-    [Dislikes] int  NULL,
-    [UploadType] int  NULL,
-    [FriendId] int  NOT NULL
+    [Dislikes] int  NULL
 );
 GO
 
@@ -95,16 +95,6 @@ CREATE TABLE [dbo].[Users] (
     [ActivationCode] uniqueidentifier  NOT NULL,
     [Password] nvarchar(max)  NOT NULL,
     [ResetPasswordCode] nvarchar(max)  NULL
-);
-GO
-
--- Creating table 'Friends'
-CREATE TABLE [dbo].[Friends] (
-    [FriendId] int IDENTITY(1,1) NOT NULL,
-    [FirstName] varchar(50)  NOT NULL,
-    [LastName] varchar(50)  NOT NULL,
-    [DateOfBirth] datetime  NOT NULL,
-    [FriendAddDate] datetime  NOT NULL
 );
 GO
 
@@ -127,16 +117,35 @@ CREATE TABLE [dbo].[Profiles] (
 );
 GO
 
--- Creating table 'FriendUser'
-CREATE TABLE [dbo].[FriendUser] (
-    [Friends_FriendId] int  NOT NULL,
-    [Users_UserId] int  NOT NULL
+-- Creating table 'UploadFiles'
+CREATE TABLE [dbo].[UploadFiles] (
+    [UploadFileId] int IDENTITY(1,1) NOT NULL,
+    [UploadContent] varbinary(max)  NOT NULL,
+    [UploadFileType] nvarchar(max)  NOT NULL,
+    [Post_PostId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Friends'
+CREATE TABLE [dbo].[Friends] (
+    [FriendId] int IDENTITY(1,1) NOT NULL,
+    [FirstName] varchar(50)  NOT NULL,
+    [LastName] varchar(50)  NOT NULL,
+    [DateOfBirth] datetime  NOT NULL,
+    [FriendAddDate] datetime  NOT NULL
 );
 GO
 
 -- Creating table 'RoleUser'
 CREATE TABLE [dbo].[RoleUser] (
     [Roles_RoleId] int  NOT NULL,
+    [Users_UserId] int  NOT NULL
+);
+GO
+
+-- Creating table 'FriendUser'
+CREATE TABLE [dbo].[FriendUser] (
+    [Friends_FriendId] int  NOT NULL,
     [Users_UserId] int  NOT NULL
 );
 GO
@@ -157,12 +166,6 @@ ADD CONSTRAINT [PK_Users]
     PRIMARY KEY CLUSTERED ([UserId] ASC);
 GO
 
--- Creating primary key on [FriendId] in table 'Friends'
-ALTER TABLE [dbo].[Friends]
-ADD CONSTRAINT [PK_Friends]
-    PRIMARY KEY CLUSTERED ([FriendId] ASC);
-GO
-
 -- Creating primary key on [RoleId] in table 'Roles'
 ALTER TABLE [dbo].[Roles]
 ADD CONSTRAINT [PK_Roles]
@@ -175,16 +178,28 @@ ADD CONSTRAINT [PK_Profiles]
     PRIMARY KEY CLUSTERED ([ProfileId] ASC);
 GO
 
--- Creating primary key on [Friends_FriendId], [Users_UserId] in table 'FriendUser'
-ALTER TABLE [dbo].[FriendUser]
-ADD CONSTRAINT [PK_FriendUser]
-    PRIMARY KEY CLUSTERED ([Friends_FriendId], [Users_UserId] ASC);
+-- Creating primary key on [UploadFileId] in table 'UploadFiles'
+ALTER TABLE [dbo].[UploadFiles]
+ADD CONSTRAINT [PK_UploadFiles]
+    PRIMARY KEY CLUSTERED ([UploadFileId] ASC);
+GO
+
+-- Creating primary key on [FriendId] in table 'Friends'
+ALTER TABLE [dbo].[Friends]
+ADD CONSTRAINT [PK_Friends]
+    PRIMARY KEY CLUSTERED ([FriendId] ASC);
 GO
 
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
 ALTER TABLE [dbo].[RoleUser]
 ADD CONSTRAINT [PK_RoleUser]
     PRIMARY KEY CLUSTERED ([Roles_RoleId], [Users_UserId] ASC);
+GO
+
+-- Creating primary key on [Friends_FriendId], [Users_UserId] in table 'FriendUser'
+ALTER TABLE [dbo].[FriendUser]
+ADD CONSTRAINT [PK_FriendUser]
+    PRIMARY KEY CLUSTERED ([Friends_FriendId], [Users_UserId] ASC);
 GO
 
 -- --------------------------------------------------
@@ -204,45 +219,6 @@ GO
 CREATE INDEX [IX_FK_UserPost]
 ON [dbo].[Posts]
     ([UserId]);
-GO
-
--- Creating foreign key on [FriendId] in table 'Posts'
-ALTER TABLE [dbo].[Posts]
-ADD CONSTRAINT [FK_FriendPost]
-    FOREIGN KEY ([FriendId])
-    REFERENCES [dbo].[Friends]
-        ([FriendId])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_FriendPost'
-CREATE INDEX [IX_FK_FriendPost]
-ON [dbo].[Posts]
-    ([FriendId]);
-GO
-
--- Creating foreign key on [Friends_FriendId] in table 'FriendUser'
-ALTER TABLE [dbo].[FriendUser]
-ADD CONSTRAINT [FK_FriendUser_Friend]
-    FOREIGN KEY ([Friends_FriendId])
-    REFERENCES [dbo].[Friends]
-        ([FriendId])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [Users_UserId] in table 'FriendUser'
-ALTER TABLE [dbo].[FriendUser]
-ADD CONSTRAINT [FK_FriendUser_User]
-    FOREIGN KEY ([Users_UserId])
-    REFERENCES [dbo].[Users]
-        ([UserId])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating non-clustered index for FOREIGN KEY 'FK_FriendUser_User'
-CREATE INDEX [IX_FK_FriendUser_User]
-ON [dbo].[FriendUser]
-    ([Users_UserId]);
 GO
 
 -- Creating foreign key on [Roles_RoleId] in table 'RoleUser'
@@ -282,6 +258,45 @@ GO
 CREATE INDEX [IX_FK_ProfileUser]
 ON [dbo].[Profiles]
     ([User_UserId]);
+GO
+
+-- Creating foreign key on [Post_PostId] in table 'UploadFiles'
+ALTER TABLE [dbo].[UploadFiles]
+ADD CONSTRAINT [FK_UploadFilePost]
+    FOREIGN KEY ([Post_PostId])
+    REFERENCES [dbo].[Posts]
+        ([PostId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UploadFilePost'
+CREATE INDEX [IX_FK_UploadFilePost]
+ON [dbo].[UploadFiles]
+    ([Post_PostId]);
+GO
+
+-- Creating foreign key on [Friends_FriendId] in table 'FriendUser'
+ALTER TABLE [dbo].[FriendUser]
+ADD CONSTRAINT [FK_FriendUser_Friend]
+    FOREIGN KEY ([Friends_FriendId])
+    REFERENCES [dbo].[Friends]
+        ([FriendId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Users_UserId] in table 'FriendUser'
+ALTER TABLE [dbo].[FriendUser]
+ADD CONSTRAINT [FK_FriendUser_User]
+    FOREIGN KEY ([Users_UserId])
+    REFERENCES [dbo].[Users]
+        ([UserId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_FriendUser_User'
+CREATE INDEX [IX_FK_FriendUser_User]
+ON [dbo].[FriendUser]
+    ([Users_UserId]);
 GO
 
 -- --------------------------------------------------

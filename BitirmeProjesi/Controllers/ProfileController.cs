@@ -8,7 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BitirmeProjesi.Models;
-
+using BitirmeProjesi.Models.ViewModel;
 
 namespace BitirmeProjesi.Controllers
 {
@@ -27,12 +27,13 @@ namespace BitirmeProjesi.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Profile profile = db.Profiles.Find(id);
+            ProfilePageViewModel ViewModel = new ProfilePageViewModel { profileM = profile };
             if (profile == null)
             {
-                
+
                 return HttpNotFound();
             }
-            return View(profile);
+            return View(ViewModel);
         }
         [Authorize]
         [HttpPost]
@@ -42,9 +43,11 @@ namespace BitirmeProjesi.Controllers
 
             var currentUser = db.Users.Where(a => a.Email == User.Identity.Name).FirstOrDefault();
 
-           
-            if (currentUser.Profile.ProfileId == id)
-            { 
+
+            if (SessionManagement.isUserLegitRequest(id, currentUser.UserId))
+
+
+            {
                 if (ModelState.IsValid)
                 {
                     if (uProfile != null)
@@ -79,15 +82,23 @@ namespace BitirmeProjesi.Controllers
                 return RedirectToAction("ProfilePage", "Profile", new { id = id });
             }
 
-           
-            
-            
+
+
+
         }
 
 
-        public ActionResult getAvatar (int id)
+
+        public ActionResult getAvatar(int id)
         {
             var avatar = db.Users.Where(a => a.UserId == id).FirstOrDefault().Profile.Avatar;
+
+            if(avatar == null)
+            {
+
+                return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
+                
+            }
 
             return File(avatar, "image/jpg");
         }

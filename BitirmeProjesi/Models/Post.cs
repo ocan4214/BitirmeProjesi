@@ -14,18 +14,22 @@ namespace BitirmeProjesi.Models
     
     public partial class Post
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Post()
+        {
+            this.UploadFiles = new HashSet<UploadFile>();
+        }
+    
         public int PostId { get; set; }
         public System.DateTime DateofPost { get; set; }
-        public byte[] UploadedFile { get; set; }
         public string UserMentions { get; set; }
         public int UserId { get; set; }
         public string ContentofPost { get; set; }
         public Nullable<int> Likes { get; set; }
         public Nullable<int> Dislikes { get; set; }
-        public Nullable<int> UploadType { get; set; }
-        public int FriendId { get; set; }
     
         public virtual User User { get; set; }
-        public virtual Friend Friend { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UploadFile> UploadFiles { get; set; }
     }
 }

@@ -8,26 +8,15 @@
   <EntityContainer Name="LogRegDBModelStoreContainer">
     <EntitySet Name="Posts" EntityType="LogRegDBModel.Store.Posts" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Users" EntityType="LogRegDBModel.Store.Users" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Friends" EntityType="LogRegDBModel.Store.Friends" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Roles" EntityType="LogRegDBModel.Store.Roles" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Profiles" EntityType="LogRegDBModel.Store.Profiles" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UploadFiles" EntityType="LogRegDBModel.Store.UploadFiles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Friends" EntityType="LogRegDBModel.Store.Friends" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RoleUser" EntityType="LogRegDBModel.Store.RoleUser" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserPost" Association="LogRegDBModel.Store.FK_UserPost">
       <End Role="User" EntitySet="Users" />
       <End Role="Post" EntitySet="Posts" />
-    </AssociationSet>
-    <AssociationSet Name="FriendPost" Association="LogRegDBModel.Store.FriendPost">
-      <End Role="Friend" EntitySet="Friends" />
-      <End Role="Post" EntitySet="Posts" />
-    </AssociationSet>
-    <AssociationSet Name="FK_FriendUser_Friend" Association="LogRegDBModel.Store.FK_FriendUser_Friend">
-      <End Role="Friend" EntitySet="Friends" />
-      <End Role="FriendUser" EntitySet="FriendUser" />
-    </AssociationSet>
-    <AssociationSet Name="FK_FriendUser_User" Association="LogRegDBModel.Store.FK_FriendUser_User">
-      <End Role="User" EntitySet="Users" />
-      <End Role="FriendUser" EntitySet="FriendUser" />
     </AssociationSet>
     <AssociationSet Name="FK_RoleUser_Role" Association="LogRegDBModel.Store.FK_RoleUser_Role">
       <End Role="Role" EntitySet="Roles" />
@@ -41,6 +30,18 @@
       <End Role="Profile" EntitySet="Profiles" />
       <End Role="User" EntitySet="Users" />
     </AssociationSet>
+    <AssociationSet Name="UploadFilePost" Association="LogRegDBModel.Store.UploadFilePost">
+      <End Role="UploadFile" EntitySet="UploadFiles" />
+      <End Role="Post" EntitySet="Posts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FriendUser_Friend" Association="LogRegDBModel.Store.FK_FriendUser_Friend">
+      <End Role="Friend" EntitySet="Friends" />
+      <End Role="FriendUser" EntitySet="FriendUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK_FriendUser_User" Association="LogRegDBModel.Store.FK_FriendUser_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="FriendUser" EntitySet="FriendUser" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Posts">
     <Key>
@@ -48,14 +49,11 @@
     </Key>
     <Property Name="PostId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="DateofPost" Type="datetime" Nullable="false" />
-    <Property Name="UploadedFile" Type="varbinary(max)" Nullable="true" />
     <Property Name="UserMentions" Type="nvarchar(max)" Nullable="true" />
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="ContentofPost" Type="nvarchar(max)" Nullable="true" />
     <Property Name="Likes" Type="int" Nullable="true" />
     <Property Name="Dislikes" Type="int" Nullable="true" />
-    <Property Name="UploadType" Type="int" Nullable="true" />
-    <Property Name="FriendId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Users">
     <Key>
@@ -70,16 +68,6 @@
     <Property Name="ActivationCode" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ResetPasswordCode" Type="nvarchar(max)" Nullable="true" />
-  </EntityType>
-  <EntityType Name="Friends">
-    <Key>
-      <PropertyRef Name="FriendId" />
-    </Key>
-    <Property Name="FriendId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="FirstName" Type="varchar" Nullable="false" MaxLength="50" />
-    <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="50" />
-    <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
-    <Property Name="FriendAddDate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="Roles">
     <Key>
@@ -100,13 +88,24 @@
     <Property Name="AvatarLocation" Type="nvarchar(max)" Nullable="true" />
     <Property Name="User_UserId" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="FriendUser">
+  <EntityType Name="UploadFiles">
     <Key>
-      <PropertyRef Name="Friends_FriendId" />
-      <PropertyRef Name="Users_UserId" />
+      <PropertyRef Name="UploadFileId" />
     </Key>
-    <Property Name="Friends_FriendId" Type="int" Nullable="false" />
-    <Property Name="Users_UserId" Type="int" Nullable="false" />
+    <Property Name="UploadFileId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UploadContent" Type="varbinary(max)" Nullable="false" />
+    <Property Name="UploadFileType" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Post_PostId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Friends">
+    <Key>
+      <PropertyRef Name="FriendId" />
+    </Key>
+    <Property Name="FriendId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="50" />
+    <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
+    <Property Name="FriendAddDate" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="RoleUser">
     <Key>
@@ -114,6 +113,14 @@
       <PropertyRef Name="Users_UserId" />
     </Key>
     <Property Name="Roles_RoleId" Type="int" Nullable="false" />
+    <Property Name="Users_UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FriendUser">
+    <Key>
+      <PropertyRef Name="Friends_FriendId" />
+      <PropertyRef Name="Users_UserId" />
+    </Key>
+    <Property Name="Friends_FriendId" Type="int" Nullable="false" />
     <Property Name="Users_UserId" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FK_UserPost">
@@ -125,18 +132,6 @@
       </Principal>
       <Dependent Role="Post">
         <PropertyRef Name="UserId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FriendPost">
-    <End Role="Friend" Type="LogRegDBModel.Store.Friends" Multiplicity="1" />
-    <End Role="Post" Type="LogRegDBModel.Store.Posts" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Friend">
-        <PropertyRef Name="FriendId" />
-      </Principal>
-      <Dependent Role="Post">
-        <PropertyRef Name="FriendId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -152,27 +147,15 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_FriendUser_Friend">
-    <End Role="Friend" Type="LogRegDBModel.Store.Friends" Multiplicity="1" />
-    <End Role="FriendUser" Type="LogRegDBModel.Store.FriendUser" Multiplicity="*" />
+  <Association Name="UploadFilePost">
+    <End Role="UploadFile" Type="LogRegDBModel.Store.UploadFiles" Multiplicity="*" />
+    <End Role="Post" Type="LogRegDBModel.Store.Posts" Multiplicity="1" />
     <ReferentialConstraint>
-      <Principal Role="Friend">
-        <PropertyRef Name="FriendId" />
+      <Principal Role="Post">
+        <PropertyRef Name="PostId" />
       </Principal>
-      <Dependent Role="FriendUser">
-        <PropertyRef Name="Friends_FriendId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_FriendUser_User">
-    <End Role="FriendUser" Type="LogRegDBModel.Store.FriendUser" Multiplicity="*" />
-    <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="UserId" />
-      </Principal>
-      <Dependent Role="FriendUser">
-        <PropertyRef Name="Users_UserId" />
+      <Dependent Role="UploadFile">
+        <PropertyRef Name="Post_PostId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -200,6 +183,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_FriendUser_Friend">
+    <End Role="Friend" Type="LogRegDBModel.Store.Friends" Multiplicity="1" />
+    <End Role="FriendUser" Type="LogRegDBModel.Store.FriendUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Friend">
+        <PropertyRef Name="FriendId" />
+      </Principal>
+      <Dependent Role="FriendUser">
+        <PropertyRef Name="Friends_FriendId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_FriendUser_User">
+    <End Role="FriendUser" Type="LogRegDBModel.Store.FriendUser" Multiplicity="*" />
+    <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="FriendUser">
+        <PropertyRef Name="Users_UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
 </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -211,15 +218,6 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Post" EntitySet="Posts" />
           </AssociationSet>
-          <EntitySet Name="Friends" EntityType="LogRegDBModel.Friend" />
-          <AssociationSet Name="FriendPost" Association="LogRegDBModel.FriendPost">
-            <End Role="Friend" EntitySet="Friends" />
-            <End Role="Post" EntitySet="Posts" />
-          </AssociationSet>
-          <AssociationSet Name="FriendUser" Association="LogRegDBModel.FriendUser">
-            <End Role="Friend" EntitySet="Friends" />
-            <End Role="User" EntitySet="Users" />
-          </AssociationSet>
           <EntitySet Name="Roles" EntityType="LogRegDBModel.Role" />
           <AssociationSet Name="RoleUser" Association="LogRegDBModel.RoleUser">
             <End Role="Role" EntitySet="Roles" />
@@ -230,6 +228,16 @@
             <End Role="Profile" EntitySet="Profiles" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="UploadFiles" EntityType="LogRegDBModel.UploadFile" />
+          <AssociationSet Name="UploadFilePost" Association="LogRegDBModel.UploadFilePost">
+            <End Role="UploadFile" EntitySet="UploadFiles" />
+            <End Role="Post" EntitySet="Posts" />
+          </AssociationSet>
+          <EntitySet Name="Friends" EntityType="LogRegDBModel.Friend" />
+          <AssociationSet Name="FriendUser" Association="LogRegDBModel.FriendUser">
+            <End Role="Friend" EntitySet="Friends" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Post">
           <Key>
@@ -237,16 +245,13 @@
           </Key>
           <Property Name="PostId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="DateofPost" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UploadedFile" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="UserMentions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <Property Name="ContentofPost" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Likes" Type="Int32" />
           <Property Name="Dislikes" Type="Int32" />
-          <Property Name="UploadType" Type="Int32" />
           <NavigationProperty Name="User" Relationship="LogRegDBModel.FK_UserPost" FromRole="Post" ToRole="User" />
-          <NavigationProperty Name="Friend" Relationship="LogRegDBModel.FriendPost" FromRole="Post" ToRole="Friend" />
-          <Property Name="FriendId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UploadFiles" Relationship="LogRegDBModel.UploadFilePost" FromRole="Post" ToRole="UploadFile" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -261,10 +266,10 @@
           <Property Name="ActivationCode" Type="Guid" Nullable="false" />
           <Property Name="Password" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Posts" Relationship="LogRegDBModel.FK_UserPost" FromRole="User" ToRole="Post" />
-          <NavigationProperty Name="Friends" Relationship="LogRegDBModel.FriendUser" FromRole="User" ToRole="Friend" />
           <NavigationProperty Name="Roles" Relationship="LogRegDBModel.RoleUser" FromRole="User" ToRole="Role" />
           <Property Name="ResetPasswordCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Profile" Relationship="LogRegDBModel.ProfileUser" FromRole="User" ToRole="Profile" />
+          <NavigationProperty Name="Friends" Relationship="LogRegDBModel.FriendUser" FromRole="User" ToRole="Friend" />
         </EntityType>
         <Association Name="FK_UserPost">
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
@@ -277,34 +282,6 @@
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
-        </Association>
-        <EntityType Name="Friend">
-          <Key>
-            <PropertyRef Name="FriendId" />
-          </Key>
-          <Property Name="FriendId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FriendAddDate" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Posts" Relationship="LogRegDBModel.FriendPost" FromRole="Friend" ToRole="Post" />
-          <NavigationProperty Name="Users" Relationship="LogRegDBModel.FriendUser" FromRole="Friend" ToRole="User" />
-        </EntityType>
-        <Association Name="FriendPost">
-          <End Type="LogRegDBModel.Friend" Role="Friend" Multiplicity="1" />
-          <End Type="LogRegDBModel.Post" Role="Post" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Friend">
-              <PropertyRef Name="FriendId" />
-            </Principal>
-            <Dependent Role="Post">
-              <PropertyRef Name="FriendId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FriendUser">
-          <End Type="LogRegDBModel.Friend" Role="Friend" Multiplicity="*" />
-          <End Type="LogRegDBModel.User" Role="User" Multiplicity="*" />
         </Association>
         <EntityType Name="Role">
           <Key>
@@ -324,15 +301,43 @@
             <PropertyRef Name="ProfileId" />
           </Key>
           <Property Name="ProfileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="true" />
-          <Property Name="LastUpdateDate" Type="DateTime" Nullable="true" />
-          <Property Name="Avatar" Type="Binary" Nullable="true" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Name="LastUpdateDate" Type="DateTime" Nullable="true" Precision="3" />
+          <Property Name="Avatar" Type="Binary" Nullable="true" MaxLength="Max" FixedLength="false" />
           <NavigationProperty Name="User" Relationship="LogRegDBModel.ProfileUser" FromRole="Profile" ToRole="User" />
-          <Property Name="AvatarLocation" Type="String" Nullable="true" />
+          <Property Name="AvatarLocation" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
         </EntityType>
         <Association Name="ProfileUser">
           <End Type="LogRegDBModel.Profile" Role="Profile" Multiplicity="1" />
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
+        </Association>
+        <EntityType Name="UploadFile">
+          <Key>
+            <PropertyRef Name="UploadFileId" />
+          </Key>
+          <Property Name="UploadFileId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UploadContent" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="UploadFileType" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Post" Relationship="LogRegDBModel.UploadFilePost" FromRole="UploadFile" ToRole="Post" />
+        </EntityType>
+        <Association Name="UploadFilePost">
+          <End Type="LogRegDBModel.UploadFile" Role="UploadFile" Multiplicity="*" />
+          <End Type="LogRegDBModel.Post" Role="Post" Multiplicity="1" />
+        </Association>
+        <EntityType Name="Friend">
+          <Key>
+            <PropertyRef Name="FriendId" />
+          </Key>
+          <Property Name="FriendId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FriendAddDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="LogRegDBModel.FriendUser" FromRole="Friend" ToRole="User" />
+        </EntityType>
+        <Association Name="FriendUser">
+          <End Type="LogRegDBModel.Friend" Role="Friend" Multiplicity="*" />
+          <End Type="LogRegDBModel.User" Role="User" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -345,14 +350,11 @@
         <MappingFragment StoreEntitySet="Posts">
           <ScalarProperty Name="PostId" ColumnName="PostId" />
           <ScalarProperty Name="DateofPost" ColumnName="DateofPost" />
-          <ScalarProperty Name="UploadedFile" ColumnName="UploadedFile" />
           <ScalarProperty Name="UserMentions" ColumnName="UserMentions" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
           <ScalarProperty Name="ContentofPost" ColumnName="ContentofPost" />
           <ScalarProperty Name="Likes" ColumnName="Likes" />
           <ScalarProperty Name="Dislikes" ColumnName="Dislikes" />
-          <ScalarProperty Name="UploadType" ColumnName="UploadType" />
-          <ScalarProperty Name="FriendId" ColumnName="FriendId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -368,17 +370,6 @@
           <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
           <ScalarProperty Name="Password" ColumnName="Password" />
           <ScalarProperty Name="ResetPasswordCode" ColumnName="ResetPasswordCode" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Friends">
-      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.Friend)">
-        <MappingFragment StoreEntitySet="Friends">
-          <ScalarProperty Name="FriendId" ColumnName="FriendId" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-          <ScalarProperty Name="FriendAddDate" ColumnName="FriendAddDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -402,14 +393,26 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <AssociationSetMapping Name="FriendUser" TypeName="LogRegDBModel.FriendUser" StoreEntitySet="FriendUser">
-      <EndProperty Name="Friend">
-        <ScalarProperty Name="FriendId" ColumnName="Friends_FriendId" />
-      </EndProperty>
-      <EndProperty Name="User">
-        <ScalarProperty Name="UserId" ColumnName="Users_UserId" />
-      </EndProperty>
-    </AssociationSetMapping>
+    <EntitySetMapping Name="UploadFiles">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.UploadFile)">
+        <MappingFragment StoreEntitySet="UploadFiles">
+          <ScalarProperty Name="UploadFileId" ColumnName="UploadFileId" />
+          <ScalarProperty Name="UploadContent" ColumnName="UploadContent" />
+          <ScalarProperty Name="UploadFileType" ColumnName="UploadFileType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Friends">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.Friend)">
+        <MappingFragment StoreEntitySet="Friends">
+          <ScalarProperty Name="FriendId" ColumnName="FriendId" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="FriendAddDate" ColumnName="FriendAddDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="RoleUser" TypeName="LogRegDBModel.RoleUser" StoreEntitySet="RoleUser">
       <EndProperty Name="Role">
         <ScalarProperty Name="RoleId" ColumnName="Roles_RoleId" />
@@ -424,6 +427,22 @@
       </EndProperty>
       <EndProperty Name="Profile">
         <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UploadFilePost" TypeName="LogRegDBModel.UploadFilePost" StoreEntitySet="UploadFiles">
+      <EndProperty Name="Post">
+        <ScalarProperty Name="PostId" ColumnName="Post_PostId" />
+      </EndProperty>
+      <EndProperty Name="UploadFile">
+        <ScalarProperty Name="UploadFileId" ColumnName="UploadFileId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="FriendUser" TypeName="LogRegDBModel.FriendUser" StoreEntitySet="FriendUser">
+      <EndProperty Name="Friend">
+        <ScalarProperty Name="FriendId" ColumnName="Friends_FriendId" />
+      </EndProperty>
+      <EndProperty Name="User">
+        <ScalarProperty Name="UserId" ColumnName="Users_UserId" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

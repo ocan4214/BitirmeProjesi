@@ -63,9 +63,14 @@ namespace BitirmeProjesi.Controllers
                 user.IsEmailVerified = false;//Başlangıçta false olacak
 
                 #region //Save data to Database
+
+                
+
+
                 Profile userProfile = new Profile();           
                 userProfile.User = user;
                 user.Profile = userProfile;
+                
                 
      
                 using (LogRegDBEntities1 dataconnection = new LogRegDBEntities1())
@@ -165,7 +170,7 @@ namespace BitirmeProjesi.Controllers
                             cookie.Expires = DateTime.Now.AddMinutes(timeout);
                             cookie.HttpOnly = true;
                             Response.Cookies.Add(cookie);
-
+                            
 
                             if (Url.IsLocalUrl(ReturnURL))
                             {
