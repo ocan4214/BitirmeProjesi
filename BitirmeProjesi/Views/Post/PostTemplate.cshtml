@@ -1,0 +1,20 @@
+﻿@model IEnumerable<BitirmeProjesi.Models.Post>
+
+
+@foreach (var postitem in Model)
+{
+    <div class="row">
+        <div class="col-4" id="Image">
+            @foreach (var image in postitem.UploadFiles)
+            {
+                <img class="img-thumbnail" style="max-width:100%;" src=@Url.Action("getPostImage","Post",new { id = image.UploadFileId})>
+            }
+        </div>
+
+        <div class="col-8">
+            <div id="TimeStamp" class="navbar-text">@postitem.DateofPost</div>
+            <div id="Content" class="lead">@postitem.ContentofPost</div>
+        </div>
+
+    </div>
+}

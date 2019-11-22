@@ -32,7 +32,7 @@ Welcome @HttpContext.Current.User.Identity.Name
     </div>
 </div>
 
-@if( Request.IsAuthenticated)//Bak bu ne diye
+@if (Request.IsAuthenticated)//Bak bu ne diye
 {
     using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" }))
     {
@@ -40,4 +40,5 @@ Welcome @HttpContext.Current.User.Identity.Name
     }
 
 }
+
 
