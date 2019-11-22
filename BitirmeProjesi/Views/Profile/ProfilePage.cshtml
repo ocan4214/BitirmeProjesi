@@ -1,5 +1,4 @@
 ﻿@model BitirmeProjesi.Models.ViewModel.ProfilePageViewModel
-
     @{
         ViewBag.Title = "Details";
     }
@@ -16,7 +15,7 @@
             <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
             <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
 
-            @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
+            @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.User.UserId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
             {
 
 
@@ -34,6 +33,10 @@
 
         </div>
 
+        <div id="UserPosts" class="container">
+            
+            @Html.Partial("~/Views/Post/PostTemplate.cshtml",Model.profileM.User.Posts)
+        </div>
 
         <div id="PostProfileContainer" class="container">
             @using (Html.BeginForm("PostProfile", "Post", new { id = Model.profileM.User.UserId }, FormMethod.Post, new { enctype = "multipart/form-data" }))

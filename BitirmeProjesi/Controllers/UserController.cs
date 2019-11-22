@@ -163,7 +163,7 @@ namespace BitirmeProjesi.Controllers
                         if (user.IsEmailVerified)
                         {
 
-                            int timeout = login.RememberMe ? 525600 : 20;//525600 min = 1 year  condition ? consequent : alternative ternary conditional operator
+                            int timeout = login.RememberMe ? 525600 : 10;//525600 min = 1 year  condition ? consequent : alternative ternary conditional operator
                             var ticket = new FormsAuthenticationTicket(login.Email, login.RememberMe, timeout);//İncele cookie oluşturuyor timeout dakika cinsinden
                             string encrypted = FormsAuthentication.Encrypt(ticket);
                             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encrypted);
@@ -281,7 +281,7 @@ namespace BitirmeProjesi.Controllers
                 IsBodyHtml = true
             })
 
-                smtp.Send(message);
+                smtp.Send(message);//try catch mail gönderemediğinde uyarı tekrar gönderme vb.
         }
 
 
