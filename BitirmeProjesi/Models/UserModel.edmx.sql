@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/06/2019 19:25:45
+-- Date Created: 11/26/2019 15:30:19
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -17,14 +17,8 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_FriendUser_Friend]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_Friend];
-GO
-IF OBJECT_ID(N'[dbo].[FK_FriendUser_User]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_User];
-GO
-IF OBJECT_ID(N'[dbo].[FK_ProfileUser]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Profiles] DROP CONSTRAINT [FK_ProfileUser];
+IF OBJECT_ID(N'[dbo].[FK_UserPost]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Posts] DROP CONSTRAINT [FK_UserPost];
 GO
 IF OBJECT_ID(N'[dbo].[FK_RoleUser_Role]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RoleUser] DROP CONSTRAINT [FK_RoleUser_Role];
@@ -32,40 +26,46 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_RoleUser_User]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[RoleUser] DROP CONSTRAINT [FK_RoleUser_User];
 GO
+IF OBJECT_ID(N'[dbo].[FK_ProfileUser]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Profiles] DROP CONSTRAINT [FK_ProfileUser];
+GO
 IF OBJECT_ID(N'[dbo].[FK_UploadFilePost]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[UploadFiles] DROP CONSTRAINT [FK_UploadFilePost];
 GO
-IF OBJECT_ID(N'[dbo].[FK_UserPost]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Posts] DROP CONSTRAINT [FK_UserPost];
+IF OBJECT_ID(N'[dbo].[FK_FriendUser_Friend]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_Friend];
+GO
+IF OBJECT_ID(N'[dbo].[FK_FriendUser_User]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_User];
 GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Friends]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Friends];
-GO
-IF OBJECT_ID(N'[dbo].[FriendUser]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[FriendUser];
-GO
 IF OBJECT_ID(N'[dbo].[Posts]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Posts];
 GO
-IF OBJECT_ID(N'[dbo].[Profiles]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Profiles];
+IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Users];
 GO
 IF OBJECT_ID(N'[dbo].[Roles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Roles];
 GO
-IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RoleUser];
+IF OBJECT_ID(N'[dbo].[Profiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Profiles];
 GO
 IF OBJECT_ID(N'[dbo].[UploadFiles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UploadFiles];
 GO
-IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Users];
+IF OBJECT_ID(N'[dbo].[Friends]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Friends];
+GO
+IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RoleUser];
+GO
+IF OBJECT_ID(N'[dbo].[FriendUser]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[FriendUser];
 GO
 
 -- --------------------------------------------------
@@ -136,6 +136,50 @@ CREATE TABLE [dbo].[Friends] (
 );
 GO
 
+-- Creating table 'Groups'
+CREATE TABLE [dbo].[Groups] (
+    [GroupId] int IDENTITY(1,1) NOT NULL,
+    [CreateDate] datetime  NOT NULL,
+    [GroupDescription] nvarchar(max)  NOT NULL,
+    [MemberCount] int  NULL,
+    [IsPublic] bit  NOT NULL,
+    [GroupName] nvarchar(max)  NOT NULL,
+    [UpdateDate] datetime  NULL,
+    [OwnerId] int  NOT NULL
+);
+GO
+
+-- Creating table 'GroupThreads'
+CREATE TABLE [dbo].[GroupThreads] (
+    [GroupDiscussionId] int IDENTITY(1,1) NOT NULL,
+    [CreateDate] tinyint  NOT NULL,
+    [GroupId] int  NOT NULL,
+    [ThreadName] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'GroupMessages'
+CREATE TABLE [dbo].[GroupMessages] (
+    [GroupMessageId] int IDENTITY(1,1) NOT NULL,
+    [CreateDate] datetime  NOT NULL,
+    [UpdateDate] datetime  NULL,
+    [MessageContext] nvarchar(max)  NOT NULL,
+    [GroupMemberId] int  NOT NULL,
+    [GroupThreadId] int  NOT NULL
+);
+GO
+
+-- Creating table 'GroupMembers'
+CREATE TABLE [dbo].[GroupMembers] (
+    [GroupMemberId] int IDENTITY(1,1) NOT NULL,
+    [CreateDate] nvarchar(max)  NOT NULL,
+    [IsAdmin] bit  NOT NULL,
+    [IsApproved] bit  NULL,
+    [UserId] int  NOT NULL,
+    [GroupId] int  NOT NULL
+);
+GO
+
 -- Creating table 'RoleUser'
 CREATE TABLE [dbo].[RoleUser] (
     [Roles_RoleId] int  NOT NULL,
@@ -188,6 +232,30 @@ GO
 ALTER TABLE [dbo].[Friends]
 ADD CONSTRAINT [PK_Friends]
     PRIMARY KEY CLUSTERED ([FriendId] ASC);
+GO
+
+-- Creating primary key on [GroupId] in table 'Groups'
+ALTER TABLE [dbo].[Groups]
+ADD CONSTRAINT [PK_Groups]
+    PRIMARY KEY CLUSTERED ([GroupId] ASC);
+GO
+
+-- Creating primary key on [GroupDiscussionId] in table 'GroupThreads'
+ALTER TABLE [dbo].[GroupThreads]
+ADD CONSTRAINT [PK_GroupThreads]
+    PRIMARY KEY CLUSTERED ([GroupDiscussionId] ASC);
+GO
+
+-- Creating primary key on [GroupMessageId] in table 'GroupMessages'
+ALTER TABLE [dbo].[GroupMessages]
+ADD CONSTRAINT [PK_GroupMessages]
+    PRIMARY KEY CLUSTERED ([GroupMessageId] ASC);
+GO
+
+-- Creating primary key on [GroupMemberId] in table 'GroupMembers'
+ALTER TABLE [dbo].[GroupMembers]
+ADD CONSTRAINT [PK_GroupMembers]
+    PRIMARY KEY CLUSTERED ([GroupMemberId] ASC);
 GO
 
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
@@ -297,6 +365,96 @@ GO
 CREATE INDEX [IX_FK_FriendUser_User]
 ON [dbo].[FriendUser]
     ([Users_UserId]);
+GO
+
+-- Creating foreign key on [GroupId] in table 'GroupThreads'
+ALTER TABLE [dbo].[GroupThreads]
+ADD CONSTRAINT [FK_GroupThreadRelation]
+    FOREIGN KEY ([GroupId])
+    REFERENCES [dbo].[Groups]
+        ([GroupId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupThreadRelation'
+CREATE INDEX [IX_FK_GroupThreadRelation]
+ON [dbo].[GroupThreads]
+    ([GroupId]);
+GO
+
+-- Creating foreign key on [UserId] in table 'GroupMembers'
+ALTER TABLE [dbo].[GroupMembers]
+ADD CONSTRAINT [FK_UserGroupMember]
+    FOREIGN KEY ([UserId])
+    REFERENCES [dbo].[Users]
+        ([UserId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroupMember'
+CREATE INDEX [IX_FK_UserGroupMember]
+ON [dbo].[GroupMembers]
+    ([UserId]);
+GO
+
+-- Creating foreign key on [GroupMemberId] in table 'GroupMessages'
+ALTER TABLE [dbo].[GroupMessages]
+ADD CONSTRAINT [FK_GroupMemberGroupMessage]
+    FOREIGN KEY ([GroupMemberId])
+    REFERENCES [dbo].[GroupMembers]
+        ([GroupMemberId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupMemberGroupMessage'
+CREATE INDEX [IX_FK_GroupMemberGroupMessage]
+ON [dbo].[GroupMessages]
+    ([GroupMemberId]);
+GO
+
+-- Creating foreign key on [GroupThreadId] in table 'GroupMessages'
+ALTER TABLE [dbo].[GroupMessages]
+ADD CONSTRAINT [FK_GroupThreadGroupMessage]
+    FOREIGN KEY ([GroupThreadId])
+    REFERENCES [dbo].[GroupThreads]
+        ([GroupDiscussionId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupThreadGroupMessage'
+CREATE INDEX [IX_FK_GroupThreadGroupMessage]
+ON [dbo].[GroupMessages]
+    ([GroupThreadId]);
+GO
+
+-- Creating foreign key on [GroupId] in table 'GroupMembers'
+ALTER TABLE [dbo].[GroupMembers]
+ADD CONSTRAINT [FK_GroupGroupMember]
+    FOREIGN KEY ([GroupId])
+    REFERENCES [dbo].[Groups]
+        ([GroupId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupGroupMember'
+CREATE INDEX [IX_FK_GroupGroupMember]
+ON [dbo].[GroupMembers]
+    ([GroupId]);
+GO
+
+-- Creating foreign key on [OwnerId] in table 'Groups'
+ALTER TABLE [dbo].[Groups]
+ADD CONSTRAINT [FK_UserGroup]
+    FOREIGN KEY ([OwnerId])
+    REFERENCES [dbo].[Users]
+        ([UserId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserGroup'
+CREATE INDEX [IX_FK_UserGroup]
+ON [dbo].[Groups]
+    ([OwnerId]);
 GO
 
 -- --------------------------------------------------

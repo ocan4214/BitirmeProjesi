@@ -16,6 +16,16 @@
         <AssociationConnector Association="LogRegDBModel.UploadFilePost" />
         <EntityTypeShape EntityType="LogRegDBModel.Friend" Width="1.5" PointX="3.375" PointY="4.875" />
         <AssociationConnector Association="LogRegDBModel.FriendUser" />
+        <EntityTypeShape EntityType="LogRegDBModel.Group" Width="1.5" PointX="6.375" PointY="4.5" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupThread" Width="1.5" PointX="8.75" PointY="4.875" IsExpanded="true" />
+        <AssociationConnector Association="LogRegDBModel.GroupThreadRelation" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupMessage" Width="1.5" PointX="10.875" PointY="4.875" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupMember" Width="1.5" PointX="10.5" PointY="8" />
+        <AssociationConnector Association="LogRegDBModel.UserGroupMember" />
+        <AssociationConnector Association="LogRegDBModel.GroupMemberGroupMessage" />
+        <AssociationConnector Association="LogRegDBModel.GroupThreadGroupMessage" />
+        <AssociationConnector Association="LogRegDBModel.GroupGroupMember" />
+        <AssociationConnector Association="LogRegDBModel.UserGroup" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
