@@ -20,6 +20,8 @@ namespace BitirmeProjesi.Models
             this.Posts = new HashSet<Post>();
             this.Roles = new HashSet<Role>();
             this.Friends = new HashSet<Friend>();
+            this.GroupMembers = new HashSet<GroupMember>();
+            this.Groups = new HashSet<Group>();
         }
     
         public int UserId { get; set; }
@@ -39,5 +41,9 @@ namespace BitirmeProjesi.Models
         public virtual Profile Profile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Friend> Friends { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GroupMember> GroupMembers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Group> Groups { get; set; }
     }
 }

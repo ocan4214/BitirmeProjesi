@@ -31,5 +31,9 @@ namespace BitirmeProjesi.Models
         public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<UploadFile> UploadFiles { get; set; }
         public virtual DbSet<Friend> Friends { get; set; }
+        public virtual DbSet<Group> Groups { get; set; }
+        public virtual DbSet<GroupThread> GroupThreads { get; set; }
+        public virtual DbSet<GroupMessage> GroupMessages { get; set; }
+        public virtual DbSet<GroupMember> GroupMembers { get; set; }
     }
 }
