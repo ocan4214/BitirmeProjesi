@@ -12,6 +12,10 @@
     <EntitySet Name="Profiles" EntityType="LogRegDBModel.Store.Profiles" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UploadFiles" EntityType="LogRegDBModel.Store.UploadFiles" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Friends" EntityType="LogRegDBModel.Store.Friends" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Groups" EntityType="LogRegDBModel.Store.Groups" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GroupThreads" EntityType="LogRegDBModel.Store.GroupThreads" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GroupMessages" EntityType="LogRegDBModel.Store.GroupMessages" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GroupMembers" EntityType="LogRegDBModel.Store.GroupMembers" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RoleUser" EntityType="LogRegDBModel.Store.RoleUser" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserPost" Association="LogRegDBModel.Store.FK_UserPost">
@@ -41,6 +45,30 @@
     <AssociationSet Name="FK_FriendUser_User" Association="LogRegDBModel.Store.FK_FriendUser_User">
       <End Role="User" EntitySet="Users" />
       <End Role="FriendUser" EntitySet="FriendUser" />
+    </AssociationSet>
+    <AssociationSet Name="GroupThreadRelation" Association="LogRegDBModel.Store.GroupThreadRelation">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="GroupThread" EntitySet="GroupThreads" />
+    </AssociationSet>
+    <AssociationSet Name="UserGroupMember" Association="LogRegDBModel.Store.UserGroupMember">
+      <End Role="User" EntitySet="Users" />
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="GroupMemberGroupMessage" Association="LogRegDBModel.Store.GroupMemberGroupMessage">
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+      <End Role="GroupMessage" EntitySet="GroupMessages" />
+    </AssociationSet>
+    <AssociationSet Name="GroupThreadGroupMessage" Association="LogRegDBModel.Store.GroupThreadGroupMessage">
+      <End Role="GroupThread" EntitySet="GroupThreads" />
+      <End Role="GroupMessage" EntitySet="GroupMessages" />
+    </AssociationSet>
+    <AssociationSet Name="GroupGroupMember" Association="LogRegDBModel.Store.GroupGroupMember">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+    </AssociationSet>
+    <AssociationSet Name="UserGroup" Association="LogRegDBModel.Store.UserGroup">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Group" EntitySet="Groups" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Posts">
@@ -107,6 +135,50 @@
     <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
     <Property Name="FriendAddDate" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="Groups">
+    <Key>
+      <PropertyRef Name="GroupId" />
+    </Key>
+    <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="GroupDescription" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="MemberCount" Type="int" Nullable="true" />
+    <Property Name="IsPublic" Type="bit" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" Nullable="true" />
+    <Property Name="OwnerId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GroupThreads">
+    <Key>
+      <PropertyRef Name="GroupDiscussionId" />
+    </Key>
+    <Property Name="GroupDiscussionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreateDate" Type="tinyint" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+    <Property Name="ThreadName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GroupMessages">
+    <Key>
+      <PropertyRef Name="GroupMessageId" />
+    </Key>
+    <Property Name="GroupMessageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" Nullable="false" />
+    <Property Name="UpdateDate" Type="datetime" Nullable="true" />
+    <Property Name="MessageContext" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="GroupMemberId" Type="int" Nullable="false" />
+    <Property Name="GroupThreadId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GroupMembers">
+    <Key>
+      <PropertyRef Name="GroupMemberId" />
+    </Key>
+    <Property Name="GroupMemberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreateDate" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsAdmin" Type="bit" Nullable="false" />
+    <Property Name="IsApproved" Type="bit" Nullable="true" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="RoleUser">
     <Key>
       <PropertyRef Name="Roles_RoleId" />
@@ -156,6 +228,78 @@
       </Principal>
       <Dependent Role="UploadFile">
         <PropertyRef Name="Post_PostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupThreadRelation">
+    <End Role="Group" Type="LogRegDBModel.Store.Groups" Multiplicity="1" />
+    <End Role="GroupThread" Type="LogRegDBModel.Store.GroupThreads" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="GroupId" />
+      </Principal>
+      <Dependent Role="GroupThread">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserGroupMember">
+    <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
+    <End Role="GroupMember" Type="LogRegDBModel.Store.GroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="GroupMember">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupMemberGroupMessage">
+    <End Role="GroupMember" Type="LogRegDBModel.Store.GroupMembers" Multiplicity="1" />
+    <End Role="GroupMessage" Type="LogRegDBModel.Store.GroupMessages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GroupMember">
+        <PropertyRef Name="GroupMemberId" />
+      </Principal>
+      <Dependent Role="GroupMessage">
+        <PropertyRef Name="GroupMemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupThreadGroupMessage">
+    <End Role="GroupThread" Type="LogRegDBModel.Store.GroupThreads" Multiplicity="1" />
+    <End Role="GroupMessage" Type="LogRegDBModel.Store.GroupMessages" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="GroupThread">
+        <PropertyRef Name="GroupDiscussionId" />
+      </Principal>
+      <Dependent Role="GroupMessage">
+        <PropertyRef Name="GroupThreadId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="GroupGroupMember">
+    <End Role="Group" Type="LogRegDBModel.Store.Groups" Multiplicity="1" />
+    <End Role="GroupMember" Type="LogRegDBModel.Store.GroupMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="GroupId" />
+      </Principal>
+      <Dependent Role="GroupMember">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserGroup">
+    <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
+    <End Role="Group" Type="LogRegDBModel.Store.Groups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Group">
+        <PropertyRef Name="OwnerId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -238,6 +382,34 @@
             <End Role="Friend" EntitySet="Friends" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="Groups" EntityType="LogRegDBModel.Group" />
+          <EntitySet Name="GroupThreads" EntityType="LogRegDBModel.GroupThread" />
+          <AssociationSet Name="GroupThreadRelation" Association="LogRegDBModel.GroupThreadRelation">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupThread" EntitySet="GroupThreads" />
+          </AssociationSet>
+          <EntitySet Name="GroupMessages" EntityType="LogRegDBModel.GroupMessage" />
+          <EntitySet Name="GroupMembers" EntityType="LogRegDBModel.GroupMember" />
+          <AssociationSet Name="UserGroupMember" Association="LogRegDBModel.UserGroupMember">
+            <End Role="User" EntitySet="Users" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="GroupMemberGroupMessage" Association="LogRegDBModel.GroupMemberGroupMessage">
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+            <End Role="GroupMessage" EntitySet="GroupMessages" />
+          </AssociationSet>
+          <AssociationSet Name="GroupThreadGroupMessage" Association="LogRegDBModel.GroupThreadGroupMessage">
+            <End Role="GroupThread" EntitySet="GroupThreads" />
+            <End Role="GroupMessage" EntitySet="GroupMessages" />
+          </AssociationSet>
+          <AssociationSet Name="GroupGroupMember" Association="LogRegDBModel.GroupGroupMember">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
+          </AssociationSet>
+          <AssociationSet Name="UserGroup" Association="LogRegDBModel.UserGroup">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Group" EntitySet="Groups" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Post">
           <Key>
@@ -270,6 +442,8 @@
           <Property Name="ResetPasswordCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Profile" Relationship="LogRegDBModel.ProfileUser" FromRole="User" ToRole="Profile" />
           <NavigationProperty Name="Friends" Relationship="LogRegDBModel.FriendUser" FromRole="User" ToRole="Friend" />
+          <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.UserGroupMember" FromRole="User" ToRole="GroupMember" />
+          <NavigationProperty Name="Groups" Relationship="LogRegDBModel.UserGroup" FromRole="User" ToRole="Group" />
         </EntityType>
         <Association Name="FK_UserPost">
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
@@ -338,6 +512,132 @@
         <Association Name="FriendUser">
           <End Type="LogRegDBModel.Friend" Role="Friend" Multiplicity="*" />
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Group">
+          <Key>
+            <PropertyRef Name="GroupId" />
+          </Key>
+          <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" />
+          <Property Name="GroupDescription" Type="String" Nullable="false" />
+          <Property Name="MemberCount" Type="Int32" Nullable="true" />
+          <Property Name="IsPublic" Type="Boolean" Nullable="false" />
+          <Property Name="GroupName" Type="String" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="true" />
+          <NavigationProperty Name="GroupThreads" Relationship="LogRegDBModel.GroupThreadRelation" FromRole="Group" ToRole="GroupThread" />
+          <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.GroupGroupMember" FromRole="Group" ToRole="GroupMember" />
+          <NavigationProperty Name="User" Relationship="LogRegDBModel.UserGroup" FromRole="Group" ToRole="User" />
+          <Property Name="OwnerId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupThread">
+          <Key>
+            <PropertyRef Name="GroupDiscussionId" />
+          </Key>
+          <Property Name="GroupDiscussionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="LogRegDBModel.GroupThreadRelation" FromRole="GroupThread" ToRole="Group" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupMessages" Relationship="LogRegDBModel.GroupThreadGroupMessage" FromRole="GroupThread" ToRole="GroupMessage" />
+          <Property Name="ThreadName" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="GroupThreadRelation">
+          <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupThread" Role="GroupThread" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupThread">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="GroupMessage">
+          <Key>
+            <PropertyRef Name="GroupMessageId" />
+          </Key>
+          <Property Name="GroupMessageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" />
+          <Property Name="UpdateDate" Type="DateTime" Nullable="true" />
+          <Property Name="MessageContext" Type="String" Nullable="false" />
+          <NavigationProperty Name="GroupMember" Relationship="LogRegDBModel.GroupMemberGroupMessage" FromRole="GroupMessage" ToRole="GroupMember" />
+          <Property Name="GroupMemberId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupThread" Relationship="LogRegDBModel.GroupThreadGroupMessage" FromRole="GroupMessage" ToRole="GroupThread" />
+          <Property Name="GroupThreadId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GroupMember">
+          <Key>
+            <PropertyRef Name="GroupMemberId" />
+          </Key>
+          <Property Name="GroupMemberId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CreateDate" Type="String" Nullable="false" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="true" />
+          <NavigationProperty Name="User" Relationship="LogRegDBModel.UserGroupMember" FromRole="GroupMember" ToRole="User" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupMessages" Relationship="LogRegDBModel.GroupMemberGroupMessage" FromRole="GroupMember" ToRole="GroupMessage" />
+          <NavigationProperty Name="Group" Relationship="LogRegDBModel.GroupGroupMember" FromRole="GroupMember" ToRole="Group" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="UserGroupMember">
+          <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupMemberGroupMessage">
+          <End Type="LogRegDBModel.GroupMember" Role="GroupMember" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupMessage" Role="GroupMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupMember">
+              <PropertyRef Name="GroupMemberId" />
+            </Principal>
+            <Dependent Role="GroupMessage">
+              <PropertyRef Name="GroupMemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupThreadGroupMessage">
+          <End Type="LogRegDBModel.GroupThread" Role="GroupThread" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupMessage" Role="GroupMessage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GroupThread">
+              <PropertyRef Name="GroupDiscussionId" />
+            </Principal>
+            <Dependent Role="GroupMessage">
+              <PropertyRef Name="GroupThreadId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="GroupGroupMember">
+          <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupMember" Role="GroupMember" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupMember">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserGroup">
+          <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Group">
+              <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -410,6 +710,54 @@
           <ScalarProperty Name="LastName" ColumnName="LastName" />
           <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
           <ScalarProperty Name="FriendAddDate" ColumnName="FriendAddDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Groups">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.Group)">
+        <MappingFragment StoreEntitySet="Groups">
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="GroupDescription" ColumnName="GroupDescription" />
+          <ScalarProperty Name="MemberCount" ColumnName="MemberCount" />
+          <ScalarProperty Name="IsPublic" ColumnName="IsPublic" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupThreads">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.GroupThread)">
+        <MappingFragment StoreEntitySet="GroupThreads">
+          <ScalarProperty Name="GroupDiscussionId" ColumnName="GroupDiscussionId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="ThreadName" ColumnName="ThreadName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupMessages">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.GroupMessage)">
+        <MappingFragment StoreEntitySet="GroupMessages">
+          <ScalarProperty Name="GroupMessageId" ColumnName="GroupMessageId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+          <ScalarProperty Name="MessageContext" ColumnName="MessageContext" />
+          <ScalarProperty Name="GroupMemberId" ColumnName="GroupMemberId" />
+          <ScalarProperty Name="GroupThreadId" ColumnName="GroupThreadId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GroupMembers">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.GroupMember)">
+        <MappingFragment StoreEntitySet="GroupMembers">
+          <ScalarProperty Name="GroupMemberId" ColumnName="GroupMemberId" />
+          <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+          <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+          <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
