@@ -23,7 +23,7 @@ namespace BitirmeProjesi.Models
         public int GroupMemberId { get; set; }
         public string CreateDate { get; set; }
         public bool IsAdmin { get; set; }
-        public Nullable<bool> IsApproved { get; set; }
+        public bool IsApproved { get; set; }
         public int UserId { get; set; }
         public int GroupId { get; set; }
     

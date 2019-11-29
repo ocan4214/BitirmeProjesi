@@ -19,8 +19,8 @@ namespace BitirmeProjesi.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PostProfile(int id, ProfilePageViewModel post, HttpPostedFileBase[] UploadedFile)
         {
-            var currentUserRequesting = db.Users.Where(a => a.Email == User.Identity.Name).FirstOrDefault();
-            if (SessionManagement.isUserLegitRequest(id,currentUserRequesting.UserId))
+            
+            if (SessionManagement.isUserLegitRequest(id, Convert.ToInt32(User.Identity.Name)))
             {
 
                 if (ModelState.IsValid)

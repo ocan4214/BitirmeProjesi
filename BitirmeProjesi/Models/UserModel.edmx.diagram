@@ -26,6 +26,10 @@
         <AssociationConnector Association="LogRegDBModel.GroupThreadGroupMessage" />
         <AssociationConnector Association="LogRegDBModel.GroupGroupMember" />
         <AssociationConnector Association="LogRegDBModel.UserGroup" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupChat" Width="1.5" PointX="6.375" PointY="8.5" />
+        <EntityTypeShape EntityType="LogRegDBModel.Connection" Width="1.5" PointX="0.5" PointY="6.5" />
+        <AssociationConnector Association="LogRegDBModel.GroupGroupChat" />
+        <AssociationConnector Association="LogRegDBModel.UserConnection" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

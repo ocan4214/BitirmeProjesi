@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 11/26/2019 15:30:19
+-- Date Created: 11/29/2019 15:50:07
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -38,6 +38,30 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_FriendUser_User]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[FriendUser] DROP CONSTRAINT [FK_FriendUser_User];
 GO
+IF OBJECT_ID(N'[dbo].[FK_GroupThreadRelation]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupThreads] DROP CONSTRAINT [FK_GroupThreadRelation];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserGroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMembers] DROP CONSTRAINT [FK_UserGroupMember];
+GO
+IF OBJECT_ID(N'[dbo].[FK_GroupMemberGroupMessage]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMessages] DROP CONSTRAINT [FK_GroupMemberGroupMessage];
+GO
+IF OBJECT_ID(N'[dbo].[FK_GroupThreadGroupMessage]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMessages] DROP CONSTRAINT [FK_GroupThreadGroupMessage];
+GO
+IF OBJECT_ID(N'[dbo].[FK_GroupGroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupMembers] DROP CONSTRAINT [FK_GroupGroupMember];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserGroup]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Groups] DROP CONSTRAINT [FK_UserGroup];
+GO
+IF OBJECT_ID(N'[dbo].[FK_GroupGroupChat]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupChats] DROP CONSTRAINT [FK_GroupGroupChat];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserConnection]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Users] DROP CONSTRAINT [FK_UserConnection];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -60,6 +84,24 @@ IF OBJECT_ID(N'[dbo].[UploadFiles]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Friends]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Friends];
+GO
+IF OBJECT_ID(N'[dbo].[Groups]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Groups];
+GO
+IF OBJECT_ID(N'[dbo].[GroupThreads]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupThreads];
+GO
+IF OBJECT_ID(N'[dbo].[GroupMessages]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupMessages];
+GO
+IF OBJECT_ID(N'[dbo].[GroupMembers]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupMembers];
+GO
+IF OBJECT_ID(N'[dbo].[GroupChats]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupChats];
+GO
+IF OBJECT_ID(N'[dbo].[Connections]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Connections];
 GO
 IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RoleUser];
@@ -90,11 +132,13 @@ CREATE TABLE [dbo].[Users] (
     [FirstName] varchar(50)  NOT NULL,
     [LastName] varchar(50)  NOT NULL,
     [Email] varchar(max)  NOT NULL,
+    [UserName] nvarchar(max)  NOT NULL,
     [DateOfBirth] datetime  NOT NULL,
     [IsEmailVerified] bit  NOT NULL,
     [ActivationCode] uniqueidentifier  NOT NULL,
     [Password] nvarchar(max)  NOT NULL,
-    [ResetPasswordCode] nvarchar(max)  NULL
+    [ResetPasswordCode] nvarchar(max)  NULL,
+    [Connection_Id] int  NOT NULL
 );
 GO
 
@@ -174,9 +218,26 @@ CREATE TABLE [dbo].[GroupMembers] (
     [GroupMemberId] int IDENTITY(1,1) NOT NULL,
     [CreateDate] nvarchar(max)  NOT NULL,
     [IsAdmin] bit  NOT NULL,
-    [IsApproved] bit  NULL,
+    [IsApproved] bit  NOT NULL,
     [UserId] int  NOT NULL,
     [GroupId] int  NOT NULL
+);
+GO
+
+-- Creating table 'GroupChats'
+CREATE TABLE [dbo].[GroupChats] (
+    [GroupChatId] int IDENTITY(1,1) NOT NULL,
+    [GroupChatName] nvarchar(max)  NOT NULL,
+    [IsPublic] bit  NOT NULL,
+    [GroupId] int  NOT NULL
+);
+GO
+
+-- Creating table 'Connections'
+CREATE TABLE [dbo].[Connections] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [ConnectionId] nvarchar(max)  NOT NULL,
+    [IsConnected] bit  NULL
 );
 GO
 
@@ -256,6 +317,18 @@ GO
 ALTER TABLE [dbo].[GroupMembers]
 ADD CONSTRAINT [PK_GroupMembers]
     PRIMARY KEY CLUSTERED ([GroupMemberId] ASC);
+GO
+
+-- Creating primary key on [GroupChatId] in table 'GroupChats'
+ALTER TABLE [dbo].[GroupChats]
+ADD CONSTRAINT [PK_GroupChats]
+    PRIMARY KEY CLUSTERED ([GroupChatId] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'Connections'
+ALTER TABLE [dbo].[Connections]
+ADD CONSTRAINT [PK_Connections]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
@@ -455,6 +528,36 @@ GO
 CREATE INDEX [IX_FK_UserGroup]
 ON [dbo].[Groups]
     ([OwnerId]);
+GO
+
+-- Creating foreign key on [GroupId] in table 'GroupChats'
+ALTER TABLE [dbo].[GroupChats]
+ADD CONSTRAINT [FK_GroupGroupChat]
+    FOREIGN KEY ([GroupId])
+    REFERENCES [dbo].[Groups]
+        ([GroupId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupGroupChat'
+CREATE INDEX [IX_FK_GroupGroupChat]
+ON [dbo].[GroupChats]
+    ([GroupId]);
+GO
+
+-- Creating foreign key on [Connection_Id] in table 'Users'
+ALTER TABLE [dbo].[Users]
+ADD CONSTRAINT [FK_UserConnection]
+    FOREIGN KEY ([Connection_Id])
+    REFERENCES [dbo].[Connections]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_UserConnection'
+CREATE INDEX [IX_FK_UserConnection]
+ON [dbo].[Users]
+    ([Connection_Id]);
 GO
 
 -- --------------------------------------------------

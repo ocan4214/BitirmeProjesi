@@ -41,10 +41,7 @@ namespace BitirmeProjesi.Controllers
         {
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
 
-            var currentUserRequesting = db.Users.Where(a => a.Email == User.Identity.Name).FirstOrDefault();
-
-
-            if (SessionManagement.isUserLegitRequest(id, currentUserRequesting.UserId))
+            if (SessionManagement.isUserLegitRequest(id, Convert.ToInt32(User.Identity.Name)))
 
 
             {

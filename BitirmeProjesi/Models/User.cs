@@ -28,6 +28,7 @@ namespace BitirmeProjesi.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string UserName { get; set; }
         public System.DateTime DateOfBirth { get; set; }
         public bool IsEmailVerified { get; set; }
         public System.Guid ActivationCode { get; set; }
@@ -45,5 +46,6 @@ namespace BitirmeProjesi.Models
         public virtual ICollection<GroupMember> GroupMembers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Group> Groups { get; set; }
+        public virtual Connection Connection { get; set; }
     }
 }

@@ -16,6 +16,8 @@
     <EntitySet Name="GroupThreads" EntityType="LogRegDBModel.Store.GroupThreads" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="GroupMessages" EntityType="LogRegDBModel.Store.GroupMessages" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="GroupMembers" EntityType="LogRegDBModel.Store.GroupMembers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="GroupChats" EntityType="LogRegDBModel.Store.GroupChats" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Connections" EntityType="LogRegDBModel.Store.Connections" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RoleUser" EntityType="LogRegDBModel.Store.RoleUser" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserPost" Association="LogRegDBModel.Store.FK_UserPost">
@@ -70,6 +72,14 @@
       <End Role="User" EntitySet="Users" />
       <End Role="Group" EntitySet="Groups" />
     </AssociationSet>
+    <AssociationSet Name="GroupGroupChat" Association="LogRegDBModel.Store.GroupGroupChat">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="GroupChat" EntitySet="GroupChats" />
+    </AssociationSet>
+    <AssociationSet Name="UserConnection" Association="LogRegDBModel.Store.UserConnection">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Connection" EntitySet="Connections" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Posts">
     <Key>
@@ -91,11 +101,13 @@
     <Property Name="FirstName" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="50" />
     <Property Name="Email" Type="varchar(max)" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
     <Property Name="DateOfBirth" Type="datetime" Nullable="false" />
     <Property Name="IsEmailVerified" Type="bit" Nullable="false" />
     <Property Name="ActivationCode" Type="uniqueidentifier" Nullable="false" />
     <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ResetPasswordCode" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="Connection_Id" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Roles">
     <Key>
@@ -175,9 +187,26 @@
     <Property Name="GroupMemberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CreateDate" Type="nvarchar(max)" Nullable="false" />
     <Property Name="IsAdmin" Type="bit" Nullable="false" />
-    <Property Name="IsApproved" Type="bit" Nullable="true" />
+    <Property Name="IsApproved" Type="bit" Nullable="false" />
     <Property Name="UserId" Type="int" Nullable="false" />
     <Property Name="GroupId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="GroupChats">
+    <Key>
+      <PropertyRef Name="GroupChatId" />
+    </Key>
+    <Property Name="GroupChatId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupChatName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsPublic" Type="bit" Nullable="false" />
+    <Property Name="GroupId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Connections">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ConnectionId" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsConnected" Type="bit" Nullable="true" />
   </EntityType>
   <EntityType Name="RoleUser">
     <Key>
@@ -303,6 +332,30 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="GroupGroupChat">
+    <End Role="Group" Type="LogRegDBModel.Store.Groups" Multiplicity="1" />
+    <End Role="GroupChat" Type="LogRegDBModel.Store.GroupChats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="GroupId" />
+      </Principal>
+      <Dependent Role="GroupChat">
+        <PropertyRef Name="GroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserConnection">
+    <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="*" />
+    <End Role="Connection" Type="LogRegDBModel.Store.Connections" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Connection">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="Connection_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_RoleUser_Role">
     <End Role="Role" Type="LogRegDBModel.Store.Roles" Multiplicity="1" />
     <End Role="RoleUser" Type="LogRegDBModel.Store.RoleUser" Multiplicity="*" />
@@ -410,6 +463,16 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Group" EntitySet="Groups" />
           </AssociationSet>
+          <EntitySet Name="GroupChats" EntityType="LogRegDBModel.GroupChat" />
+          <EntitySet Name="Connections" EntityType="LogRegDBModel.Connection" />
+          <AssociationSet Name="GroupGroupChat" Association="LogRegDBModel.GroupGroupChat">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="GroupChat" EntitySet="GroupChats" />
+          </AssociationSet>
+          <AssociationSet Name="UserConnection" Association="LogRegDBModel.UserConnection">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Connection" EntitySet="Connections" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Post">
           <Key>
@@ -433,6 +496,7 @@
           <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UserName" Type="String" Nullable="false" />
           <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="IsEmailVerified" Type="Boolean" Nullable="false" />
           <Property Name="ActivationCode" Type="Guid" Nullable="false" />
@@ -444,6 +508,7 @@
           <NavigationProperty Name="Friends" Relationship="LogRegDBModel.FriendUser" FromRole="User" ToRole="Friend" />
           <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.UserGroupMember" FromRole="User" ToRole="GroupMember" />
           <NavigationProperty Name="Groups" Relationship="LogRegDBModel.UserGroup" FromRole="User" ToRole="Group" />
+          <NavigationProperty Name="Connection" Relationship="LogRegDBModel.UserConnection" FromRole="User" ToRole="Connection" />
         </EntityType>
         <Association Name="FK_UserPost">
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
@@ -528,6 +593,7 @@
           <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.GroupGroupMember" FromRole="Group" ToRole="GroupMember" />
           <NavigationProperty Name="User" Relationship="LogRegDBModel.UserGroup" FromRole="Group" ToRole="User" />
           <Property Name="OwnerId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupChats" Relationship="LogRegDBModel.GroupGroupChat" FromRole="Group" ToRole="GroupChat" />
         </EntityType>
         <EntityType Name="GroupThread">
           <Key>
@@ -572,7 +638,7 @@
           <Property Name="GroupMemberId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreateDate" Type="String" Nullable="false" />
           <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
-          <Property Name="IsApproved" Type="Boolean" Nullable="true" />
+          <Property Name="IsApproved" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="User" Relationship="LogRegDBModel.UserGroupMember" FromRole="GroupMember" ToRole="User" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GroupMessages" Relationship="LogRegDBModel.GroupMemberGroupMessage" FromRole="GroupMember" ToRole="GroupMessage" />
@@ -639,6 +705,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="GroupChat">
+          <Key>
+            <PropertyRef Name="GroupChatId" />
+          </Key>
+          <Property Name="GroupChatId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupChatName" Type="String" Nullable="false" />
+          <Property Name="IsPublic" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="LogRegDBModel.GroupGroupChat" FromRole="GroupChat" ToRole="Group" />
+          <Property Name="GroupId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Connection" >
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConnectionId" Type="String" Nullable="false" />
+          <Property Name="IsConnected" Type="Boolean" Nullable="true" />
+          <NavigationProperty Name="User" Relationship="LogRegDBModel.UserConnection" FromRole="Connection" ToRole="User" />
+        </EntityType>
+        <Association Name="GroupGroupChat">
+          <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="LogRegDBModel.GroupChat" Role="GroupChat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="GroupChat">
+              <PropertyRef Name="GroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserConnection">
+          <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
+          <End Type="LogRegDBModel.Connection" Role="Connection" Multiplicity="1" />
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -665,6 +766,7 @@
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="LastName" ColumnName="LastName" />
           <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
           <ScalarProperty Name="IsEmailVerified" ColumnName="IsEmailVerified" />
           <ScalarProperty Name="ActivationCode" ColumnName="ActivationCode" />
@@ -761,6 +863,25 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="GroupChats">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.GroupChat)">
+        <MappingFragment StoreEntitySet="GroupChats">
+          <ScalarProperty Name="GroupChatId" ColumnName="GroupChatId" />
+          <ScalarProperty Name="GroupChatName" ColumnName="GroupChatName" />
+          <ScalarProperty Name="IsPublic" ColumnName="IsPublic" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Connections">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.Connection)">
+        <MappingFragment StoreEntitySet="Connections">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ConnectionId" ColumnName="ConnectionId" />
+          <ScalarProperty Name="IsConnected" ColumnName="IsConnected" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="RoleUser" TypeName="LogRegDBModel.RoleUser" StoreEntitySet="RoleUser">
       <EndProperty Name="Role">
         <ScalarProperty Name="RoleId" ColumnName="Roles_RoleId" />
@@ -791,6 +912,14 @@
       </EndProperty>
       <EndProperty Name="User">
         <ScalarProperty Name="UserId" ColumnName="Users_UserId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="UserConnection" TypeName="LogRegDBModel.UserConnection" StoreEntitySet="Users">
+      <EndProperty Name="Connection">
+        <ScalarProperty Name="Id" ColumnName="Connection_Id" />
+      </EndProperty>
+      <EndProperty Name="User">
+        <ScalarProperty Name="UserId" ColumnName="UserId" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>
