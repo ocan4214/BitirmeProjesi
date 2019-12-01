@@ -169,6 +169,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
+    <Compile Include="Controllers\GroupController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\ProfileController.cs" />
@@ -177,9 +178,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\GroupChatHub.cs" />
     <Compile Include="Models\Connection.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Extended\Group.cs" />
     <Compile Include="Models\Extended\User.cs" />
     <Compile Include="Models\Friend.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
@@ -305,6 +308,7 @@
     <Content Include="Views\User\ResetPassword.cshtml" />
     <Content Include="Views\Profile\ProfilePage.cshtml" />
     <Content Include="Views\Post\PostTemplate.cshtml" />
+    <Content Include="Views\Group\CreateGroup.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

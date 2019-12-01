@@ -18,6 +18,18 @@ namespace BitirmeProjesi
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "User", action = "Login", id = UrlParameter.Optional }
             );
+
+
+            routes.MapRoute(
+                name: "JoinGroup",
+                url: "Group/JoinGroup/{groupid}/{uid}",
+                defaults: new { controller = "Group", action = "JoinGroup", groupid = UrlParameter.Optional, uid = UrlParameter.Optional }
+                );
+
+
+
+
+
         }
     }
 }

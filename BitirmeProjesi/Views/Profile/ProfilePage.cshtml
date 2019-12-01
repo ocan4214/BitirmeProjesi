@@ -1,102 +1,102 @@
 ﻿@model BitirmeProjesi.Models.ViewModel.ProfilePageViewModel
-    @{
-        ViewBag.Title = "Details";
-    }
+@{
+    ViewBag.Title = "Details";
+}
 
-    <h2>Details</h2>
+<h2>Details</h2>
 
-    <div>
-        <h4>Profile</h4>
-        @ViewBag.Cookie
-        @ViewBag.Message
-        @ViewBag.Message2
-        @ViewBag.Message3
-        <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
-            <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
-            <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
-
-            @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.User.UserId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
-            {
-
-
-                <div class="input-group mb-3 ">
-                    <div class="input-group-prepend">
-                        <input type="submit" value="Upload Avatar" class="btn btn-outline-secondary" />
-                    </div>
-                    <div class="custom-file">
-                        <input type="file" name="Avatar" id="_AvatarUpload" class="custom-file-input" />
-                        <label class="custom-file-label" for="_AvatarUpload">Choose a File</label>
-                    </div>
-                </div>
-
-            }
-
-        </div>
-
-        <div id="UserPosts" class="container">
-            
-            @Html.Partial("~/Views/Post/PostTemplate.cshtml",Model.profileM.User.Posts)
-        </div>
-
-        <div id="PostProfileContainer" class="container">
-            @using (Html.BeginForm("PostProfile", "Post", new { id = Model.profileM.User.UserId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="form-group">
-                    @Html.LabelFor(model => model.postM.ContentofPost, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.postM.ContentofPost, new { htmlAttributes = new { @class = "form-control" } })
-
-                    </div>
-                </div>
-
-                @Html.HiddenFor(model => model.postM.Dislikes);
-                @Html.HiddenFor(model => model.postM.Likes);
-                @Html.HiddenFor(model => model.postM.UserMentions);
-
-                <div class="form-group">
-                    @Html.Label("Uploads", new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <input type="file" id="Image" name="UploadedFile" multiple /><!-- Buradaki name gönderilecek   public ActionResult Create([Bind(...)Afet afet,HttpPostedFileBase upload) HttpPostedFileBase parametre ismi ile aynı olmalı-->
-                    </div>
-                </div>
-
-                <input type="submit" value="Post" class="btn btn-outline-danger" />
-
-            }
-
-
-        </div>
-
-
-    </div>
-
-    @if (Request.IsAuthenticated)//Bak bu ne diye
+@foreach (var item in Model.profileM.User.Groups)
+{
+    using (@Html.BeginForm("JoinGroup","Group",new { groupid = item.GroupId , uid = Convert.ToInt32(User.Identity.Name) } ,FormMethod.Post, new { @id = item.GroupName+"Form" }))
     {
-        using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" }))
+        <p>GroupId : @item.GroupId</p>
+        <p>GroupName : @item.GroupName</p>
+        <input type="submit"  value="Join The Group"  class="btn-danger" />
+
+    }
+}
+
+        Is group join success = @ViewBag.ResultofGroupMember
+        <div>
+            <h4>Profile</h4>
+            @ViewBag.Cookie
+            @ViewBag.Message
+            @ViewBag.Message2
+            @ViewBag.Message3
+            <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
+                <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
+                <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
+
+                @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
+                {
+
+
+                    <div class="input-group mb-3 ">
+                        <div class="input-group-prepend">
+                            <input type="submit" value="Upload Avatar" class="btn btn-outline-secondary" />
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="Avatar" id="_AvatarUpload" class="custom-file-input" />
+                            <label class="custom-file-label" for="_AvatarUpload">Choose a File</label>
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+
+            <div id="UserPosts" class="container">
+
+                @Html.Partial("~/Views/Post/PostTemplate.cshtml", Model.profileM.User.Posts)
+            </div>
+
+            <div id="PostProfileContainer" class="container">
+                @using (Html.BeginForm("PostProfile", "Post", new { id = Model.profileM.User.UserId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.postM.ContentofPost, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.postM.ContentofPost, new { htmlAttributes = new { @class = "form-control" } })
+
+                        </div>
+                    </div>
+
+                    @Html.HiddenFor(model => model.postM.Dislikes);
+                    @Html.HiddenFor(model => model.postM.Likes);
+                    @Html.HiddenFor(model => model.postM.UserMentions);
+
+                    <div class="form-group">
+                        @Html.Label("Uploads", new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <input type="file" id="Image" name="UploadedFile" multiple /><!-- Buradaki name gönderilecek   public ActionResult Create([Bind(...)Afet afet,HttpPostedFileBase upload) HttpPostedFileBase parametre ismi ile aynı olmalı-->
+                        </div>
+                    </div>
+
+                    <input type="submit" value="Post" class="btn btn-outline-danger" />
+
+                }
+
+
+            </div>
+
+            @Html.ActionLink("Create Group", "CreateGroup", "Group", null, null)
+
+        </div>
+
+        @if (Request.IsAuthenticated)//Bak bu ne diye
         {
-            <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+            using (Html.BeginForm("Logout", "User", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+            }
+
         }
 
-    }
 
 
-
-    <p>
-
-
-    </p>
+        <p>
 
 
-    @section Scripts
-{
+        </p>
 
-
-
-
-
-
-
-
-
-    }

@@ -27,6 +27,7 @@ namespace BitirmeProjesi.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Profile profile = db.Profiles.Find(id);
+            
             ProfilePageViewModel ViewModel = new ProfilePageViewModel { profileM = profile };
             if (profile == null)
             {
@@ -41,9 +42,7 @@ namespace BitirmeProjesi.Controllers
         {
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
 
-            if (SessionManagement.isUserLegitRequest(id, Convert.ToInt32(User.Identity.Name)))
-
-
+            if (SessionManagement.isUserLegitRequest(Convert.ToInt32(User.Identity.Name), uProfile.User.UserId))
             {
                 if (ModelState.IsValid)
                 {
@@ -88,13 +87,13 @@ namespace BitirmeProjesi.Controllers
 
         public ActionResult getAvatar(int id)
         {
-            var avatar = db.Users.Where(a => a.UserId == id).FirstOrDefault().Profile.Avatar;
+            var avatar = db.Users.Where(a => a.Profile.ProfileId == id).FirstOrDefault().Profile.Avatar;
 
-            if(avatar == null)
+            if (avatar == null)
             {
 
                 return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
-                
+
             }
 
             return File(avatar, "image/jpg");

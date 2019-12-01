@@ -20,7 +20,7 @@ namespace BitirmeProjesi.Controllers
         public ActionResult PostProfile(int id, ProfilePageViewModel post, HttpPostedFileBase[] UploadedFile)
         {
             
-            if (SessionManagement.isUserLegitRequest(id, Convert.ToInt32(User.Identity.Name)))
+            if (SessionManagement.isUserLegitRequest(Convert.ToInt32(User.Identity.Name), id))
             {
 
                 if (ModelState.IsValid)
