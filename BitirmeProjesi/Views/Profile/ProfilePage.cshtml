@@ -7,11 +7,11 @@
 
 @foreach (var item in Model.profileM.User.Groups)
 {
-    using (@Html.BeginForm("JoinGroup","Group",new { groupid = item.GroupId , uid = Convert.ToInt32(User.Identity.Name) } ,FormMethod.Post, new { @id = item.GroupName+"Form" }))
+    using (@Html.BeginForm("JoinGroup", "Group", new { groupid = item.GroupId, uid = Convert.ToInt32(User.Identity.Name) }, FormMethod.Post, new { @id = item.GroupName + "Form" }))
     {
         <p>GroupId : @item.GroupId</p>
         <p>GroupName : @item.GroupName</p>
-        <input type="submit"  value="Join The Group"  class="btn-danger" />
+        <input type="submit" value="Join The Group" class="btn-danger" />
 
     }
 }
@@ -27,22 +27,25 @@
                 <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
                 <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
 
-                @using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
+                @if (SessionManagement.isCurrentUser(Model.profileM.User.UserId , Convert.ToInt32(User.Identity.Name)))
                 {
 
+                    using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
+                    {
 
-                    <div class="input-group mb-3 ">
-                        <div class="input-group-prepend">
-                            <input type="submit" value="Upload Avatar" class="btn btn-outline-secondary" />
-                        </div>
-                        <div class="custom-file">
-                            <input type="file" name="Avatar" id="_AvatarUpload" class="custom-file-input" />
-                            <label class="custom-file-label" for="_AvatarUpload">Choose a File</label>
-                        </div>
-                    </div>
 
+                        <div class="input-group mb-3 ">
+                            <div class="input-group-prepend">
+                                <input type="submit" value="Upload Avatar" class="btn btn-outline-secondary" />
+                            </div>
+                            <div class="custom-file">
+                                <input type="file" name="Avatar" id="_AvatarUpload" class="custom-file-input" />
+                                <label class="custom-file-label" for="_AvatarUpload">Choose a File</label>
+                            </div>
+                        </div>
+
+                    }
                 }
-
             </div>
 
             <div id="UserPosts" class="container">

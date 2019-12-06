@@ -30,7 +30,7 @@ namespace BitirmeProjesi.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (SessionManagement.isUserLegitRequest(Convert.ToInt32(User.Identity.Name), id))
+                    if (SessionManagement.isCurrentUser(Convert.ToInt32(User.Identity.Name), id))
                     {
                         using (var innerContext = new LogRegDBEntities1())
                         {
@@ -90,6 +90,15 @@ namespace BitirmeProjesi.Controllers
             return RedirectToAction("ProfilePage", "Profile", new { id = db.Users.Find(uid).Profile.ProfileId });
         }
 
+        [Authorize]
+        [HttpGet]
+        public ActionResult GroupPage(int groupid)
+        {
+
+            //Grup Public mi grup üyesi mi bunları düşün
+
+            
+        }
 
 
 

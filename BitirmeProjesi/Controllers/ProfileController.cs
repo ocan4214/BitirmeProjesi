@@ -18,7 +18,7 @@ namespace BitirmeProjesi.Controllers
 
 
         // GET: Profile/Details/5
-        [Authorize]
+        [Authorize(Roles = "Admin,Member")]
         public ActionResult ProfilePage(int? id)
         {
             ViewBag.Message2 = User.Identity.Name;
@@ -36,13 +36,13 @@ namespace BitirmeProjesi.Controllers
             }
             return View(ViewModel);
         }
-        [Authorize]
+        [Authorize(Roles = "Admin,Member")]
         [HttpPost]
         public ActionResult UploadAvatar(int id, HttpPostedFileBase Avatar)
         {
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
 
-            if (SessionManagement.isUserLegitRequest(Convert.ToInt32(User.Identity.Name), uProfile.User.UserId))
+            if (SessionManagement.isCurrentUser(Convert.ToInt32(User.Identity.Name), uProfile.User.UserId))
             {
                 if (ModelState.IsValid)
                 {

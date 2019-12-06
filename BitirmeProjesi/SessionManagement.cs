@@ -9,7 +9,7 @@ namespace BitirmeProjesi
     {
         
 
-        public static bool isUserLegitRequest(int currentUserid, int RequestingUserid)
+        public static bool isCurrentUser(int currentUserid, int RequestingUserid)
         {
             
                 if (currentUserid == RequestingUserid)
@@ -24,6 +24,7 @@ namespace BitirmeProjesi
 
             
         }
+
 
     }
 }
