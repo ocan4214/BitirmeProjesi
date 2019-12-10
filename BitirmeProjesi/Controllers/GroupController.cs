@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using BitirmeProjesi.Models.ViewModel;
 
 namespace BitirmeProjesi.Controllers
 {
@@ -41,14 +42,14 @@ namespace BitirmeProjesi.Controllers
                             group.UpdateDate = System.DateTime.Now;
                             group.MemberCount = 0;
                             group.OwnerId = id;
-
+                            
 
 
                             innerContext.Groups.Add(group);
                             innerContext.SaveChanges();
                             innerContext.Dispose();
                         }
-                        var res = CreateGroupMember(group.GroupId, id);
+                        var res = CreateGroupMember(group.GroupId, id,true);
 
 
                         if (res == true)
@@ -80,7 +81,7 @@ namespace BitirmeProjesi.Controllers
         public ActionResult JoinGroup(int groupid, int uid)
         {
 
-            var res = CreateGroupMember(groupid, uid);
+            var res = CreateGroupMember(groupid, uid, false);
 
             if (res == true)
                 ViewBag.ResultofGroupMember = "Succesfully Added";
@@ -94,16 +95,51 @@ namespace BitirmeProjesi.Controllers
         [HttpGet]
         public ActionResult GroupPage(int groupid)
         {
-
             //Grup Public mi grup üyesi mi bunları düşün
 
-            
+            Group group = db.Groups.Find(groupid);
+            int userID = Convert.ToInt32(User.Identity.Name);
+            GroupMember groupMember = group.GroupMembers.Where(a => a.UserId == userID).FirstOrDefault();
+
+            //gruba üye olmadan bir gruba katılmayı dene
+
+            if (group !=null )
+            {
+
+                if (CanAccessGroup(group, groupMember))
+                {
+                    GroupPageViewModel groupPageViewModel = new GroupPageViewModel() { groupMemberView = groupMember, groupView = group };
+
+                    return View(groupPageViewModel);
+                }
+                else
+                {
+                    ViewBag.groupError = " you are not in the group or not approved";
+                    //Sayfaya katılma  linkine döndürsün
+                    return RedirectToAction("ProfilePage", "Profile", new { id = db.Users.Find(userID).Profile.ProfileId });
+                }
+
+
+            }
+
+            else
+            {
+                ViewBag.groupError = "group not exist";
+                return RedirectToAction("ProfilePage", "Profile", new { id = db.Users.Find(userID).Profile.ProfileId });
+            }
+
+
         }
 
 
+        [NonAction]
+        public static bool CanAccessGroup(Group group, GroupMember groupMember)
+        {
+            return group.IsPublic || (groupMember != null && groupMember.IsApproved == true);
+        }
 
         [NonAction]
-        public bool CreateGroupMember(int groupid, int userid)
+        public static bool CreateGroupMember(int groupid, int userid,bool isAdmin)
         {
 
 
@@ -116,9 +152,16 @@ namespace BitirmeProjesi.Controllers
                     if (!group.GroupMembers.Where(a => a.UserId == user.UserId).Any())
                     {
                         group.MemberCount++;
-                        var groupMember = new GroupMember { CreateDate = System.DateTime.Now.ToLongDateString(), User = user, Group = group, GroupId = group.GroupId, UserId = user.UserId };
+                        var groupMember = new GroupMember { CreateDate = System.DateTime.Now.ToLongDateString(), User = user, Group = group, GroupId = group.GroupId, UserId = user.UserId, IsAdmin = false, IsApproved = false };
+                        if (isAdmin == true)
+                        { 
+                            groupMember.IsAdmin = true;
+                            groupMember.IsApproved = true;
+                        }
                         group.GroupMembers.Add(groupMember);
                         user.GroupMembers.Add(groupMember);
+
+                      
 
                         innerContext.GroupMembers.Add(groupMember);
                         innerContext.SaveChanges();

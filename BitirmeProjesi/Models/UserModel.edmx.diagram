@@ -26,11 +26,12 @@
         <AssociationConnector Association="LogRegDBModel.GroupThreadGroupMessage" />
         <AssociationConnector Association="LogRegDBModel.GroupGroupMember" />
         <AssociationConnector Association="LogRegDBModel.UserGroup" />
-        <EntityTypeShape EntityType="LogRegDBModel.GroupChat" Width="1.5" PointX="6.375" PointY="8.5" />
-        <EntityTypeShape EntityType="LogRegDBModel.Connection" Width="1.5" PointX="0.5" PointY="6.5" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupChat" Width="1.5" PointX="7" PointY="8.625" />
         <AssociationConnector Association="LogRegDBModel.GroupGroupChat" />
-        <AssociationConnector Association="LogRegDBModel.UserConnection" />
-      </Diagram>
+        <EntityTypeShape EntityType="LogRegDBModel.Connection" Width="1.5" PointX="2.625" PointY="10.375" />
+        <AssociationConnector Association="LogRegDBModel.FK_GroupChatConnection" />
+        <AssociationConnector Association="LogRegDBModel.FK_UserConnection" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 12/06/2019 16:34:54
+-- Date Created: 12/10/2019 18:37:31
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -59,8 +59,11 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_GroupGroupChat]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GroupChats] DROP CONSTRAINT [FK_GroupGroupChat];
 GO
+IF OBJECT_ID(N'[dbo].[FK_GroupChatConnection]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Connections] DROP CONSTRAINT [FK_GroupChatConnection];
+GO
 IF OBJECT_ID(N'[dbo].[FK_UserConnection]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Users] DROP CONSTRAINT [FK_UserConnection];
+    ALTER TABLE [dbo].[Connections] DROP CONSTRAINT [FK_UserConnection];
 GO
 
 -- --------------------------------------------------
@@ -137,8 +140,7 @@ CREATE TABLE [dbo].[Users] (
     [IsEmailVerified] bit  NOT NULL,
     [ActivationCode] uniqueidentifier  NOT NULL,
     [Password] nvarchar(max)  NOT NULL,
-    [ResetPasswordCode] nvarchar(max)  NULL,
-    [Connection_Id] int  NOT NULL
+    [ResetPasswordCode] nvarchar(max)  NULL
 );
 GO
 
@@ -236,8 +238,10 @@ GO
 -- Creating table 'Connections'
 CREATE TABLE [dbo].[Connections] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [ConnectionId] nvarchar(max)  NOT NULL,
-    [IsConnected] bit  NULL
+    [ConnectionId] nchar(4000)  NOT NULL,
+    [isConnected] bit  NOT NULL,
+    [UserId] int  NOT NULL,
+    [GroupChatId] int  NOT NULL
 );
 GO
 
@@ -545,19 +549,34 @@ ON [dbo].[GroupChats]
     ([GroupId]);
 GO
 
--- Creating foreign key on [Connection_Id] in table 'Users'
-ALTER TABLE [dbo].[Users]
+-- Creating foreign key on [GroupChatId] in table 'Connections'
+ALTER TABLE [dbo].[Connections]
+ADD CONSTRAINT [FK_GroupChatConnection]
+    FOREIGN KEY ([GroupChatId])
+    REFERENCES [dbo].[GroupChats]
+        ([GroupChatId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupChatConnection'
+CREATE INDEX [IX_FK_GroupChatConnection]
+ON [dbo].[Connections]
+    ([GroupChatId]);
+GO
+
+-- Creating foreign key on [UserId] in table 'Connections'
+ALTER TABLE [dbo].[Connections]
 ADD CONSTRAINT [FK_UserConnection]
-    FOREIGN KEY ([Connection_Id])
-    REFERENCES [dbo].[Connections]
-        ([Id])
+    FOREIGN KEY ([UserId])
+    REFERENCES [dbo].[Users]
+        ([UserId])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_UserConnection'
 CREATE INDEX [IX_FK_UserConnection]
-ON [dbo].[Users]
-    ([Connection_Id]);
+ON [dbo].[Connections]
+    ([UserId]);
 GO
 
 -- --------------------------------------------------

@@ -16,8 +16,11 @@ namespace BitirmeProjesi.Models
     {
         public int Id { get; set; }
         public string ConnectionId { get; set; }
-        public Nullable<bool> IsConnected { get; set; }
+        public bool isConnected { get; set; }
+        public int UserId { get; set; }
+        public int GroupChatId { get; set; }
     
+        public virtual GroupChat GroupChat { get; set; }
         public virtual User User { get; set; }
     }
 }

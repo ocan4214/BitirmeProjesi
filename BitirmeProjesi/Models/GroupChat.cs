@@ -14,11 +14,19 @@ namespace BitirmeProjesi.Models
     
     public partial class GroupChat
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public GroupChat()
+        {
+            this.Connections = new HashSet<Connection>();
+        }
+    
         public int GroupChatId { get; set; }
         public string GroupChatName { get; set; }
         public bool IsPublic { get; set; }
         public int GroupId { get; set; }
     
         public virtual Group Group { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Connection> Connections { get; set; }
     }
 }

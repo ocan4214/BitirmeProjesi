@@ -10,7 +10,7 @@
     using (@Html.BeginForm("JoinGroup", "Group", new { groupid = item.GroupId, uid = Convert.ToInt32(User.Identity.Name) }, FormMethod.Post, new { @id = item.GroupName + "Form" }))
     {
         <p>GroupId : @item.GroupId</p>
-        <p>GroupName : @item.GroupName</p>
+         @Html.ActionLink(item.GroupName,"GroupPage","Group",new { groupid = item.GroupId }, new { @id = item.GroupName + "grouppagelink" })
         <input type="submit" value="Join The Group" class="btn-danger" />
 
     }
@@ -19,6 +19,7 @@
         Is group join success = @ViewBag.ResultofGroupMember
         <div>
             <h4>Profile</h4>
+            @ViewBag.groupError
             @ViewBag.Cookie
             @ViewBag.Message
             @ViewBag.Message2
@@ -27,7 +28,7 @@
                 <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
                 <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
 
-                @if (SessionManagement.isCurrentUser(Model.profileM.User.UserId , Convert.ToInt32(User.Identity.Name)))
+                @if (SessionManagement.isCurrentUser(Model.profileM.User.UserId, Convert.ToInt32(User.Identity.Name)))
                 {
 
                     using (Html.BeginForm("UploadAvatar", "Profile", new { id = Model.profileM.ProfileId }, FormMethod.Post, new { enctype = "multipart/form-data", style = "width:20vw;height:35vh", @id = "AvatarUploadForm" }))
