@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using BitirmeProjesi.Models.ViewModel;
 
+
+
 namespace BitirmeProjesi.Controllers
 {
     public class GroupController : Controller
@@ -13,7 +15,7 @@ namespace BitirmeProjesi.Controllers
 
 
         LogRegDBEntities1 db = new LogRegDBEntities1();
-
+        
 
         [Authorize]
         public ActionResult CreateGroup()
@@ -42,9 +44,9 @@ namespace BitirmeProjesi.Controllers
                             group.UpdateDate = System.DateTime.Now;
                             group.MemberCount = 0;
                             group.OwnerId = id;
-                            
 
-
+                            group.GroupChats.Add(new GroupChat() { GroupChatName = group.GroupName + "ChatRoom", IsPublic = true, GroupId = group.GroupId });
+                            //Database te groupChat için kayıt oluşuyor mu bak
                             innerContext.Groups.Add(group);
                             innerContext.SaveChanges();
                             innerContext.Dispose();
@@ -58,7 +60,7 @@ namespace BitirmeProjesi.Controllers
                             ViewBag.ResultofGroupMember1 = "Error Happened";
 
                     }
-                    return View();
+                    return RedirectToAction("GroupPage", "Group", new { groupid = group.GroupId });
                 }
                 else
                 {
@@ -91,6 +93,10 @@ namespace BitirmeProjesi.Controllers
             return RedirectToAction("ProfilePage", "Profile", new { id = db.Users.Find(uid).Profile.ProfileId });
         }
 
+
+
+
+
         [Authorize]
         [HttpGet]
         public ActionResult GroupPage(int groupid)
@@ -109,6 +115,7 @@ namespace BitirmeProjesi.Controllers
                 if (CanAccessGroup(group, groupMember))
                 {
                     GroupPageViewModel groupPageViewModel = new GroupPageViewModel() { groupMemberView = groupMember, groupView = group };
+
 
                     return View(groupPageViewModel);
                 }

@@ -85,7 +85,7 @@ namespace BitirmeProjesi.Controllers
 
 
 
-        public ActionResult getAvatar(int id)
+        public ActionResult GetAvatar(int id)
         {
             var avatar = db.Users.Where(a => a.Profile.ProfileId == id).FirstOrDefault().Profile.Avatar;
 

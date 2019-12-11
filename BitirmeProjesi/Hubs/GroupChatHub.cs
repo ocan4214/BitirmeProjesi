@@ -11,17 +11,9 @@ namespace BitirmeProjesi.Hubs
 {
     public class GroupChatHub : Hub
     {
-        public void HelloFRR()
-        {
-            Clients.All.hello();
-        }
+       
 
-        public void Henlo()
-        {
-
-            Clients.All.HenloFr();
-            
-        }
+   
 
         [Authorize]
         public void JoinGroupChat(string groupChatName, int groupid)
@@ -31,7 +23,7 @@ namespace BitirmeProjesi.Hubs
             using (LogRegDBEntities1 db = new LogRegDBEntities1())
             {
                 var user = db.Users.Find(uid);
-                var room = db.GroupChats.Where(a => a.GroupChatName == groupChatName && a.GroupId == groupid).First();
+                var room = db.GroupChats.Where(a => a.GroupChatName == groupChatName && a.GroupId == groupid).FirstOrDefault();
                 //Katılma butonunu viewde yetkiye göre kullanıcıya gösterilecek.
                 if (room != null && !user.Connections.Any(a => a.GroupChatId == room.GroupChatId))
                 {
@@ -40,12 +32,12 @@ namespace BitirmeProjesi.Hubs
                     user.Connections.Add(ncon);
                     db.SaveChanges();
                     Groups.Add(Context.ConnectionId, groupChatName);
-                    Clients.Group(groupChatName).ServerNotification("User " + user.UserName + " has joined the  " + groupChatName + "Chat Room");
+                    Clients.Group(groupChatName).ServerNotification("Join Room = User " + user.UserName + " has joined the  " + groupChatName + "Chat Room");
 
                 }
                 else
                 {
-                    Clients.Caller.ServerNotification("You are already in the " + groupChatName + " chat room");
+                    Clients.Caller.ServerNotification("Join Room = You are already in the " + groupChatName + " chat room");
                 }
             }
 
@@ -54,6 +46,39 @@ namespace BitirmeProjesi.Hubs
 
         public override Task OnConnected()
         {
+            using (var db = new LogRegDBEntities1())
+            {
+                var user = db.Users.Find(Convert.ToInt32(Context.User.Identity.Name));
+
+                if(user == null)
+                {
+
+                    Clients.Caller.ServerNotification("On Connected = User does not exist");
+
+                }
+
+                else
+                {
+                    string chatName = Context.QueryString["groupChatName"].ToString();
+
+                    var connection = user.Connections.Where(a => a.GroupChat.GroupChatName == chatName).FirstOrDefault();
+
+                    if (connection ==null)
+                    {
+                        Clients.Caller.ServerNotification("On Connected = ChatRoom does not exist");
+                        
+                    }
+                    
+                    else
+                    {
+
+                        Groups.Add(Context.ConnectionId, connection.GroupChat.GroupChatName);
+                        Clients.Caller.ServerNotification("On Connected = Joined to" + connection.GroupChat.GroupChatName);
+                    }
+
+                }
+
+            }
 
 
 
@@ -61,8 +86,7 @@ namespace BitirmeProjesi.Hubs
 
 
 
-
-            return base.OnConnected();
+                return base.OnConnected();
         }
 
 

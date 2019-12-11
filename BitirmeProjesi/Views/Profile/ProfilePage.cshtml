@@ -26,7 +26,7 @@
             @ViewBag.Message3
             <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
                 <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
-                <img id="UserAvatar" src="@Url.Action("getAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
+                <img id="UserAvatar" src="@Url.Action("GetAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">
 
                 @if (SessionManagement.isCurrentUser(Model.profileM.User.UserId, Convert.ToInt32(User.Identity.Name)))
                 {

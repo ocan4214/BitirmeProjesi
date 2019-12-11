@@ -6,28 +6,26 @@
 
 <h2>GroupPage</h2>
 
-
-
+@Html.ActionLink("Create a New Chat Room", "CreateGroupChat", new { groupid = Model.groupView.GroupId })
+@Html.Hidden("groupId", Model.groupView.GroupId)
 <div class="container">
 
-    <div class="container row">
-        <div class="col-8">
-            <h1 id="titleName">ADSADAs</h1>
-            <input type="text" id="txtMessage" />
-            <br />
-            <button id="btnSend">Send Message</button>
-            <hr />
-            <ul id="chatList">  </ul>
-        </div>
+    <div class="row">
+        <div class="chatRooms col">
+            @foreach (var room in Model.groupView.GroupChats)
+            {
+                <input type="hidden" id="chatName" value="@room.GroupChatName" />
+                <button id="joinBtn" >Sohbete Katıl</button>
+                <div id="Chatroom+@room.GroupChatName">
 
-        <div class="col-4">
 
-            <h1 id="groupName">GRP</h1>
-            <input type="text" id="grpMessage" />
-            <br />
-            <button id="grpSend">SendGrp</button>
-            <hr />
-            <ol id="groupChat"></ol>
+
+                </div>
+            }
+
+
+
+
         </div>
     </div>
 
@@ -53,29 +51,26 @@
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/signalr/hubs")
     <script>
-        var groupChatHubProxy = $.connection.groupChatHub;
+        var groupChatHub = $.connection.groupChatHub;
 
-        groupChatHubProxy.client.henloFr = function () {
-            $("#chatList").append("<li class='other'>" + "Araba" + ":" + "ARABAAA" + "</li>")
-        };
+        groupChatHub.client.serverNotification = function (message) { console.log(message); };
+        var chatName = $("#chatName").val();
+        var groupId = $("#groupId").val();
+        $.connection.hub.qs = {
+            'groupChatName': chatName };
 
 
         $.connection.hub.start().done(function () {
 
-            groupChatHubProxy.client.hello = function () {
-                console.log("AXDAD");
-            };
-
-
-            groupChatHubProxy.server.henlo();
-            groupChatHubProxy.server.helloFRR();
-
+            $("#joinBtn").click(function () {
+                groupChatHub.server.joinGroupChat(chatName, groupId);
+            });
 
 
         }).fail(function () {
 
 
-
+            console.log("Hub couldn't start");
 
         });
 
