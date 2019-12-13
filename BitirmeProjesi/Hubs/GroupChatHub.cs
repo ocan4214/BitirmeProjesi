@@ -9,21 +9,25 @@ using Microsoft.AspNet.SignalR.Hubs;
 
 namespace BitirmeProjesi.Hubs
 {
+    public class JSChatMessage
+    {
+        public string ChatMessage { get; set; }
+        public string Username { get; set; }
+        public DateTime PostDate { get; set; }
+    }
+
     public class GroupChatHub : Hub
     {
-       
-
-   
 
         [Authorize]
-        public void JoinGroupChat(string groupChatName, int groupid)
+        public void JoinGroupChat(string groupChatName, int groupId)
         {
             int uid = Convert.ToInt32(Context.User.Identity.Name);
 
             using (LogRegDBEntities1 db = new LogRegDBEntities1())
             {
                 var user = db.Users.Find(uid);
-                var room = db.GroupChats.Where(a => a.GroupChatName == groupChatName && a.GroupId == groupid).FirstOrDefault();
+                var room = db.GroupChats.Where(a => a.GroupChatName == groupChatName && a.GroupId == groupId).FirstOrDefault();
                 //Katılma butonunu viewde yetkiye göre kullanıcıya gösterilecek.
                 if (room != null && !user.Connections.Any(a => a.GroupChatId == room.GroupChatId))
                 {
@@ -43,6 +47,37 @@ namespace BitirmeProjesi.Hubs
 
         }
 
+        [Authorize]
+        public void SendMessage(string groupChatName, int groupId, string message)
+        {
+
+            using (LogRegDBEntities1 db = new LogRegDBEntities1())
+            {
+
+                int uid = Convert.ToInt32(Context.User.Identity.Name);
+                string username = db.Users.Find(uid).UserName;
+                var room = db.GroupChats.Where(a => a.GroupChatName == groupChatName && a.GroupId == groupId).FirstOrDefault();
+                if (room != null && room.Connections.Where(a => a.UserId == uid).Any())
+                {
+                    GroupChatMessage chatMessage = new GroupChatMessage() { ChatMessage = message, Username = username, GroupChatId = room.GroupChatId, GroupChat = room, PostDate = System.DateTime.Now };
+                    JSChatMessage jSChatMessage = new JSChatMessage() { ChatMessage = message, Username = username, PostDate = System.DateTime.Now };
+                    room.GroupChatMessages.Add(chatMessage);
+
+                    db.SaveChanges();
+
+                    Clients.Group(groupChatName).SendMessageGroup(jSChatMessage);
+                }
+
+                else
+                {
+                    Clients.Caller.ServerNotification("Send Message = Room does not exist");
+                }
+
+            }
+
+        }
+
+
 
         public override Task OnConnected()
         {
@@ -50,7 +85,7 @@ namespace BitirmeProjesi.Hubs
             {
                 var user = db.Users.Find(Convert.ToInt32(Context.User.Identity.Name));
 
-                if(user == null)
+                if (user == null)
                 {
 
                     Clients.Caller.ServerNotification("On Connected = User does not exist");
@@ -63,12 +98,12 @@ namespace BitirmeProjesi.Hubs
 
                     var connection = user.Connections.Where(a => a.GroupChat.GroupChatName == chatName).FirstOrDefault();
 
-                    if (connection ==null)
+                    if (connection == null)
                     {
                         Clients.Caller.ServerNotification("On Connected = ChatRoom does not exist");
-                        
+
                     }
-                    
+
                     else
                     {
 
@@ -86,7 +121,7 @@ namespace BitirmeProjesi.Hubs
 
 
 
-                return base.OnConnected();
+            return base.OnConnected();
         }
 
 
@@ -95,13 +130,13 @@ namespace BitirmeProjesi.Hubs
 
             using (LogRegDBEntities1 db = new LogRegDBEntities1())
             {
-                
+
 
 
             }
 
 
-                return base.OnDisconnected(stopCalled);
+            return base.OnDisconnected(stopCalled);
         }
 
 

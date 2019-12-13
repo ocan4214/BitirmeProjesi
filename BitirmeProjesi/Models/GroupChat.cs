@@ -18,6 +18,7 @@ namespace BitirmeProjesi.Models
         public GroupChat()
         {
             this.Connections = new HashSet<Connection>();
+            this.GroupChatMessages = new HashSet<GroupChatMessage>();
         }
     
         public int GroupChatId { get; set; }
@@ -28,5 +29,7 @@ namespace BitirmeProjesi.Models
         public virtual Group Group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Connection> Connections { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<GroupChatMessage> GroupChatMessages { get; set; }
     }
 }

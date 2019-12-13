@@ -199,6 +199,9 @@
     <Compile Include="Models\GroupChat.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GroupChatMessage.cs">
+      <DependentUpon>UserModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\GroupMember.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>

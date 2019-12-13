@@ -31,6 +31,8 @@
         <EntityTypeShape EntityType="LogRegDBModel.Connection" Width="1.5" PointX="2.625" PointY="10.375" />
         <AssociationConnector Association="LogRegDBModel.FK_GroupChatConnection" />
         <AssociationConnector Association="LogRegDBModel.FK_UserConnection" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupChatMessage" Width="1.5" PointX="8.375" PointY="11.875" />
+        <AssociationConnector Association="LogRegDBModel.GroupChatGroupChatMessage" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

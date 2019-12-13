@@ -6,7 +6,7 @@
 
 <h2>GroupPage</h2>
 
-@Html.ActionLink("Create a New Chat Room", "CreateGroupChat", new { groupid = Model.groupView.GroupId })
+    
 @Html.Hidden("groupId", Model.groupView.GroupId)
 <div class="container">
 
@@ -16,11 +16,16 @@
             {
                 <input type="hidden" id="chatName" value="@room.GroupChatName" />
                 <button id="joinBtn" >Sohbete Katıl</button>
-                <div id="Chatroom+@room.GroupChatName">
+                <div id="Chatroom_@room.GroupChatName">
 
 
 
                 </div>
+
+                <input type="text" id="chatMessage"/>
+                <button type="button" id="sendChatMessage">Send</button>
+
+
             }
 
 
@@ -28,36 +33,33 @@
 
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div>
 
 
 
-@section scripts
+@section scripts 
 {
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/signalr/hubs")
     <script>
+
+        //Buraya chat template yaz ve onu her mesajda append ile ekle Chatroom'a
+
+
         var groupChatHub = $.connection.groupChatHub;
 
         groupChatHub.client.serverNotification = function (message) { console.log(message); };
         var chatName = $("#chatName").val();
         var groupId = $("#groupId").val();
         $.connection.hub.qs = {
-            'groupChatName': chatName };
+            'groupChatName': chatName
+        };
+
+        groupChatHub.client.sendMessageGroup = function (groupChatMessage) {
+
+            $('#Chatroom_'+chatName).append('<div>' + groupChatMessage.Username + ' : ' + ' ' + groupChatMessage.ChatMessage + ' Date : ' + groupChatMessage.PostDate + '</div>');
+
+        };
 
 
         $.connection.hub.start().done(function () {
@@ -66,6 +68,12 @@
                 groupChatHub.server.joinGroupChat(chatName, groupId);
             });
 
+
+            $("#sendChatMessage").click(function () {
+                var message = $("#chatMessage").val();
+                groupChatHub.server.sendMessage(chatName, groupId, message);
+
+            });
 
         }).fail(function () {
 

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 12/10/2019 18:37:31
+-- Date Created: 12/13/2019 17:29:32
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -245,6 +245,16 @@ CREATE TABLE [dbo].[Connections] (
 );
 GO
 
+-- Creating table 'GroupChatMessages'
+CREATE TABLE [dbo].[GroupChatMessages] (
+    [ChatMessageId] int IDENTITY(1,1) NOT NULL,
+    [ChatMessage] nvarchar(max)  NOT NULL,
+    [PostDate] datetime  NOT NULL,
+    [Username] nvarchar(max)  NOT NULL,
+    [GroupChatId] int  NOT NULL
+);
+GO
+
 -- Creating table 'RoleUser'
 CREATE TABLE [dbo].[RoleUser] (
     [Roles_RoleId] int  NOT NULL,
@@ -333,6 +343,12 @@ GO
 ALTER TABLE [dbo].[Connections]
 ADD CONSTRAINT [PK_Connections]
     PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [ChatMessageId] in table 'GroupChatMessages'
+ALTER TABLE [dbo].[GroupChatMessages]
+ADD CONSTRAINT [PK_GroupChatMessages]
+    PRIMARY KEY CLUSTERED ([ChatMessageId] ASC);
 GO
 
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
@@ -577,6 +593,21 @@ GO
 CREATE INDEX [IX_FK_UserConnection]
 ON [dbo].[Connections]
     ([UserId]);
+GO
+
+-- Creating foreign key on [GroupChatId] in table 'GroupChatMessages'
+ALTER TABLE [dbo].[GroupChatMessages]
+ADD CONSTRAINT [FK_GroupChatGroupChatMessage]
+    FOREIGN KEY ([GroupChatId])
+    REFERENCES [dbo].[GroupChats]
+        ([GroupChatId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupChatGroupChatMessage'
+CREATE INDEX [IX_FK_GroupChatGroupChatMessage]
+ON [dbo].[GroupChatMessages]
+    ([GroupChatId]);
 GO
 
 -- --------------------------------------------------
