@@ -22,19 +22,69 @@ select,
 textarea {
     max-width: 280px;
 }
- 
-.avatar
-{
-    
-    transition:transform .2s;
-    width:auto;
-    max-height:256px;
-    max-width:256px;
-    height:auto;
-    
+
+.chatcontainer {
+
+border:2px solid #dedede;
+background-color:#f1f1f1;
+border-radius:5px;
+padding:10px;
+margin:10px 0;
 }
 
-.avatar:hover
-{
-    transform:scale(2.5);
+.chatroom{
+    overflow-y:scroll;
+    height:350px;
+    width:450px;
 }
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+
+.chatcontainer::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.chatcontainer img {
+    float: left;
+    max-width: 60px;
+    width: 100%;
+    margin-right: 20px;
+    border-radius: 50%;
+}
+
+.chatcontainer img.right {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0;
+}
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+/* Style time text */
+.time-left {
+    float: left;
+    color: #999;
+}
+
+
+
+.avatar {
+    transition: transform .2s;
+    width: auto;
+    max-height: 256px;
+    max-width: 256px;
+    height: auto;
+}
+
+    .avatar:hover {
+        transform: scale(2.5);
+    }

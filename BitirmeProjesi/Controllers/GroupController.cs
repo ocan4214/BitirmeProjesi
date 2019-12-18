@@ -115,9 +115,9 @@ namespace BitirmeProjesi.Controllers
                 if (CanAccessGroup(group, groupMember))
                 {
                     GroupPageViewModel groupPageViewModel = new GroupPageViewModel() { groupMemberView = groupMember, groupView = group };
-
-
-                    return View(groupPageViewModel);
+                    //BAk
+                    var g = groupPageViewModel.groupView.GroupChats;
+                    return View(groupPageViewModel);    
                 }
                 else
                 {
@@ -139,11 +139,31 @@ namespace BitirmeProjesi.Controllers
         }
 
 
+
+
+        [HttpGet]
+        [Authorize]
+        public ActionResult GetProfileAvatarForChat(string username)
+        {
+            var userprofile = db.Users.Where(a => a.UserName == username).FirstOrDefault().Profile;
+            
+            if(userprofile.Avatar == null)
+            {
+                return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
+            }
+
+            return File(userprofile.Avatar, "image/jpg");
+
+        }
+
+       
         [NonAction]
         public static bool CanAccessGroup(Group group, GroupMember groupMember)
         {
             return group.IsPublic || (groupMember != null && groupMember.IsApproved == true);
         }
+
+        
 
         [NonAction]
         public static bool CreateGroupMember(int groupid, int userid,bool isAdmin)

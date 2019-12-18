@@ -6,7 +6,7 @@
 
 <h2>GroupPage</h2>
 
-    
+
 @Html.Hidden("groupId", Model.groupView.GroupId)
 <div class="container">
 
@@ -15,14 +15,14 @@
             @foreach (var room in Model.groupView.GroupChats)
             {
                 <input type="hidden" id="chatName" value="@room.GroupChatName" />
-                <button id="joinBtn" >Sohbete Katıl</button>
-                <div id="Chatroom_@room.GroupChatName">
-
+                <button id="joinBtn">Sohbete Katıl</button>
+                <div class="chatroom" id="Chatroom_@room.GroupChatName">
+                    @Html.Partial("~/Views/Group/PreviousMessagesChatRoom.cshtml", room.GroupChatMessages)
 
 
                 </div>
 
-                <input type="text" id="chatMessage"/>
+                <input type="text" id="chatMessage" />
                 <button type="button" id="sendChatMessage">Send</button>
 
 
@@ -37,10 +37,12 @@
 
 
 
-@section scripts 
+@section scripts
 {
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/signalr/hubs")
+    
+
     <script>
 
         //Buraya chat template yaz ve onu her mesajda append ile ekle Chatroom'a
@@ -57,7 +59,12 @@
 
         groupChatHub.client.sendMessageGroup = function (groupChatMessage) {
 
-            $('#Chatroom_'+chatName).append('<div>' + groupChatMessage.Username + ' : ' + ' ' + groupChatMessage.ChatMessage + ' Date : ' + groupChatMessage.PostDate + '</div>');
+            $('#Chatroom_' + chatName).append('<div class="chatcontainer darker">'+
+                                              '<img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = Session["Username"].ToString() })" alt="avatar"  class="left" id="userAvatar_'+groupChatMessage.Username+'" />'+
+                                              '<p>'+groupChatMessage.ChatMessage+'</p>'+
+                                              '<span class="time-right">'+groupChatMessage.PostDate+'</span>'+
+                                              '</div>'
+            );
 
         };
 

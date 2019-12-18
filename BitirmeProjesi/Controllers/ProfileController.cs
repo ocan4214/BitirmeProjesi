@@ -83,6 +83,7 @@ namespace BitirmeProjesi.Controllers
 
         }
 
+        
 
 
         public ActionResult GetAvatar(int id)

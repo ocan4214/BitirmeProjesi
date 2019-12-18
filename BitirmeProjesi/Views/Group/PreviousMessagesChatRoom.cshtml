@@ -1,0 +1,27 @@
+﻿@model ICollection<BitirmeProjesi.Models.GroupChatMessage>
+
+
+@foreach(var modelitem in Model.OrderBy(a => a.PostDate))
+{
+    if(SessionManagement.isUserOwnTheMessage(Convert.ToInt32(User.Identity.Name),modelitem.Username))
+    { //Kullanıcı kendisi yolladıysa beyaz başkasının mesajıysa siyah
+   <div class="chatcontainer darker">
+       <img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = modelitem.Username  })" alt="avatar"  class="left" id="userAvatar_@modelitem.Username" />
+       <p>@modelitem.ChatMessage</p>
+       <span class="time-right">@modelitem.PostDate.ToString()</span>
+   </div>
+    }
+    else
+    {
+        <div class="chatcontainer">
+            <img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = modelitem.Username  })" alt="avatarOfMember" class="right" id="userAvatar_@modelitem.Username" />
+            <p>@modelitem.ChatMessage</p>
+            <span class="time-left">@modelitem.PostDate.ToString()</span>
+        </div>
+
+    }
+
+
+}
+
+
