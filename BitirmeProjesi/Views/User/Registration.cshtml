@@ -3,12 +3,10 @@
 @{
     ViewBag.Title = "Registration";
 }
-
 <h2>Registration</h2>
 
 @if (ViewBag.Status != null && Convert.ToBoolean(ViewBag.Status))
 {
-
     if (ViewBag.Message != null)//Kayıt Düzgün yapıldıysa success sayfası düzgün değilse kayıt ekranı bir  daha gösterilecek
     {
         <div class="alert alert-success">
@@ -19,16 +17,12 @@
 
 else
 {
-
     using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
         <div class="form-group">
-
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
             <div class="form-group">
                 @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -36,7 +30,6 @@ else
                     @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -44,7 +37,6 @@ else
                     @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -52,7 +44,6 @@ else
                     @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -61,7 +52,6 @@ else
                     @Html.ValidationMessage("EmailExist", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -69,8 +59,6 @@ else
                     @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-
             <div class="form-group">
                 @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -78,7 +66,6 @@ else
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.ConfirmPassword, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -86,28 +73,20 @@ else
                     @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
             </div>
         </div>
-
         if (ViewBag.Message != null)
         {
             <div class="alert alert-danger">
                 <strong>Error!</strong>@ViewBag.Message
             </div>
         }
-
     }
-
-
 }
-
-
-
 <div>
     @Html.ActionLink("Login", "Login")
 </div>

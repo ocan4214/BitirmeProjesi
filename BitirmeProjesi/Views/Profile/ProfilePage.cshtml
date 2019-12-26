@@ -5,25 +5,20 @@
 
 <h2>Details</h2>
 
-@foreach (var item in Model.profileM.User.Groups)
+@foreach (var item in Model.profileM.User.GroupMembers)
 {
-    using (@Html.BeginForm("JoinGroup", "Group", new { groupid = item.GroupId, uid = Convert.ToInt32(User.Identity.Name) }, FormMethod.Post, new { @id = item.GroupName + "Form" }))
+    using (@Html.BeginForm("JoinGroup", "Group", new { groupid = item.GroupId, uid = Convert.ToInt32(User.Identity.Name) }, FormMethod.Post, new { @id = item.Group.GroupName + "Form" }))
     {
         <p>GroupId : @item.GroupId</p>
-         @Html.ActionLink(item.GroupName,"GroupPage","Group",new { groupid = item.GroupId }, new { @id = item.GroupName + "grouppagelink" })
+         @Html.ActionLink(item.Group.GroupName,"GroupPage","Group",new { groupid = item.GroupId }, new { @id = item.Group.GroupName + "grouppagelink" })
         <input type="submit" value="Join The Group" class="btn-danger" />
 
     }
 }
 
-        Is group join success = @ViewBag.ResultofGroupMember
         <div>
             <h4>Profile</h4>
-            @ViewBag.groupError
             
-            @ViewBag.Message
-            @ViewBag.Message2
-            @ViewBag.Message3
             <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
                 <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->
                 <img id="UserAvatar" src="@Url.Action("GetAvatar","Profile", new { id = Model.profileM.ProfileId  })" alt="AvatarImg" class="avatar">

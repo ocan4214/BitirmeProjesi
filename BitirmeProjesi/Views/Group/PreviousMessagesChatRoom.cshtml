@@ -7,7 +7,7 @@
     { //Kullanıcı kendisi yolladıysa beyaz başkasının mesajıysa siyah
    <div class="chatcontainer darker">
        <img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = modelitem.Username  })" alt="avatar"  class="left" id="userAvatar_@modelitem.Username" />
-       <p>@modelitem.ChatMessage</p>
+       <p>@modelitem.Username: @modelitem.ChatMessage</p>
        <span class="time-right">@modelitem.PostDate.ToString()</span>
    </div>
     }
@@ -15,7 +15,7 @@
     {
         <div class="chatcontainer">
             <img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = modelitem.Username  })" alt="avatarOfMember" class="right" id="userAvatar_@modelitem.Username" />
-            <p>@modelitem.ChatMessage</p>
+            <p>@modelitem.Username: @modelitem.ChatMessage</p>
             <span class="time-left">@modelitem.PostDate.ToString()</span>
         </div>
 

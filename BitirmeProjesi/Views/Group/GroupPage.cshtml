@@ -4,7 +4,7 @@
     ViewBag.Title = "GroupPage";
 }
 
-<h2>GroupPage</h2>
+<h2>@Model.groupView.GroupName</h2>
 
 
 @Html.Hidden("groupId", Model.groupView.GroupId)
@@ -41,7 +41,7 @@
 {
     @Scripts.Render("~/bundles/signalr")
     @Scripts.Render("~/signalr/hubs")
-    
+
 
     <script>
 
@@ -56,37 +56,54 @@
         $.connection.hub.qs = {
             'groupChatName': chatName
         };
+        //Grup isminde boşluk olursa hata oluyor bu tip selector kullan
+        groupChatHub.client.sendMessageGroupOthers = function (groupChatMessage) {
+            var dateR = dateFormat(groupChatMessage.PostDate);
 
-        groupChatHub.client.sendMessageGroup = function (groupChatMessage) {
 
-            $('#Chatroom_' + chatName).append('<div class="chatcontainer darker">'+
-                                              '<img src="@Url.Action("GetProfileAvatarForChat", "Group", new { username = Session["Username"].ToString() })" alt="avatar"  class="left" id="userAvatar_'+groupChatMessage.Username+'" />'+
-                                              '<p>'+groupChatMessage.ChatMessage+'</p>'+
-                                              '<span class="time-right">'+groupChatMessage.PostDate+'</span>'+
-                                              '</div>'
+            $('[id="Chatroom_' + chatName + '"]').append('<div class="chatcontainer">' +
+                '<img src="/Group/GetProfileAvatarForChat?username=' + groupChatMessage.Username + '" alt="avatar"  class="right" id="userAvatar_' + groupChatMessage.Username + '" />' +
+                '<p>' + groupChatMessage.Username+ ": " + groupChatMessage.ChatMessage + '</p>' +
+                '<span class="time-left">' + dateR + '</span>' +
+                '</div>'
+            );
+
+        };
+        groupChatHub.client.sendMessageGroupCaller = function (groupChatMessage) {
+            var dateR = dateFormat(groupChatMessage.PostDate);
+
+            $('[id="Chatroom_' + chatName + '"]').append('<div class="chatcontainer darker">' +
+                '<img src="/Group/GetProfileAvatarForChat?username=' + groupChatMessage.Username + '" alt="avatar"  class="left" id="userAvatar_' + groupChatMessage.Username + '" />' +
+                '<p>' + groupChatMessage.Username + ": " + groupChatMessage.ChatMessage + '</p>' +
+                '<span class="time-right">' + dateR + '</span>' +
+                '</div>'
             );
 
         };
 
+        var dateFormat = function (pDate) {
+            var t = new Date(pDate);
+            var dateString = t.getDate() + "." +
+                ("0" + (t.getMonth() + 1)).slice(-2) + "." +
+                t.getFullYear() + " " +
+                ("0" + t.getHours()).slice(-2) + ":" +
+                ("0" + t.getMinutes()).slice(-2) + ":" +
+                ("0" + t.getSeconds()).slice(-2);
+
+            return dateString;
+        }
 
         $.connection.hub.start().done(function () {
-
             $("#joinBtn").click(function () {
                 groupChatHub.server.joinGroupChat(chatName, groupId);
             });
-
-
             $("#sendChatMessage").click(function () {
                 var message = $("#chatMessage").val();
                 groupChatHub.server.sendMessage(chatName, groupId, message);
 
             });
-
         }).fail(function () {
-
-
             console.log("Hub couldn't start");
-
         });
 
 

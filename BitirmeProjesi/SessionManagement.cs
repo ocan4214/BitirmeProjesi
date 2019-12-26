@@ -51,6 +51,18 @@ namespace BitirmeProjesi
         }
 
 
+        public static string getUserName(int id)
+        {
+            using (LogRegDBEntities1 db = new LogRegDBEntities1())
+            {
+                return db.Users.Find(id).UserName;
+
+
+
+            }
+
+
+        }
     }
 
 
