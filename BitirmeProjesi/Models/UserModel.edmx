@@ -162,6 +162,7 @@
     <Property Name="GroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CreateDate" Type="datetime" Nullable="false" />
     <Property Name="GroupDescription" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="GroupType" Type="nvarchar(max)" Nullable="false" />
     <Property Name="MemberCount" Type="int" Nullable="true" />
     <Property Name="IsPublic" Type="bit" Nullable="false" />
     <Property Name="GroupName" Type="nvarchar(max)" Nullable="false" />
@@ -638,6 +639,7 @@
           <Property Name="GroupId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="GroupDescription" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="GroupType" Type="String" Nullable="false" />
           <Property Name="MemberCount" Type="Int32" Nullable="true" />
           <Property Name="IsPublic" Type="Boolean" Nullable="false" />
           <Property Name="GroupName" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
@@ -922,6 +924,7 @@
           <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
           <ScalarProperty Name="GroupDescription" ColumnName="GroupDescription" />
+          <ScalarProperty Name="GroupType" ColumnName="GroupType" />
           <ScalarProperty Name="MemberCount" ColumnName="MemberCount" />
           <ScalarProperty Name="IsPublic" ColumnName="IsPublic" />
           <ScalarProperty Name="GroupName" ColumnName="GroupName" />

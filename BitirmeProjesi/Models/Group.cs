@@ -25,6 +25,7 @@ namespace BitirmeProjesi.Models
         public int GroupId { get; set; }
         public System.DateTime CreateDate { get; set; }
         public string GroupDescription { get; set; }
+        public string GroupType { get; set; }
         public Nullable<int> MemberCount { get; set; }
         public bool IsPublic { get; set; }
         public string GroupName { get; set; }

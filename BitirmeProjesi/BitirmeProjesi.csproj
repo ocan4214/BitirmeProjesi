@@ -211,6 +211,7 @@
     <Compile Include="Models\GroupThread.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\GroupTypeEnum.cs" />
     <Compile Include="Models\Post.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>

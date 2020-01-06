@@ -12,18 +12,23 @@ namespace BitirmeProjesi.Models
     {
 
 
-        
-        
-       
+
+
+
     }
 
     public class GroupMetadata
     {
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Required Group Description")]
+        [Display(Name = "Group Description")]
         public string GroupDescription { get; set; }
         [Required]
         public bool IsPublic { get; set; }
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Required Group Name")]
+        [Display(Name = "Group Name")]
         public string GroupName { get; set; }
+        [Required]
+        [Display(Name = "Group Type")]
+        public string GroupType { get; set; }
     }
 }

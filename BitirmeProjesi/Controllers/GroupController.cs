@@ -43,7 +43,7 @@ namespace BitirmeProjesi.Controllers
                             innerContext.SaveChanges();
                             innerContext.Dispose();
                         }
-                        var res = CreateGroupMember(group.GroupId, id,true);
+                        var res = CreateGroupMember(group.GroupId, id, true);
                         if (res == true)
                             ViewBag.ResultofGroupMember1 = "Succesfully Added";
                         else
@@ -85,14 +85,14 @@ namespace BitirmeProjesi.Controllers
             int userID = Convert.ToInt32(User.Identity.Name);
             GroupMember groupMember = group.GroupMembers.Where(a => a.UserId == userID).FirstOrDefault();
             //gruba üye olmadan bir gruba katılmayı dene
-            if (group !=null )
+            if (group != null)
             {
                 if (CanAccessGroup(group, groupMember))
                 {
                     GroupPageViewModel groupPageViewModel = new GroupPageViewModel() { groupMemberView = groupMember, groupView = group };
                     //BAk
                     var g = groupPageViewModel.groupView.GroupChats;
-                    return View(groupPageViewModel);    
+                    return View(groupPageViewModel);
                 }
                 else
                 {
@@ -113,13 +113,13 @@ namespace BitirmeProjesi.Controllers
         public ActionResult GetProfileAvatarForChat(string username)
         {
             var userprofile = db.Users.Where(a => a.UserName == username).FirstOrDefault().Profile;
-            if(userprofile.Avatar == null)
+            if (userprofile.Avatar == null)
             {
                 return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
             }
             return File(userprofile.Avatar, "image/jpg");
         }
-       
+
         [NonAction]
         public static bool CanAccessGroup(Group group, GroupMember groupMember)
         {
@@ -127,7 +127,7 @@ namespace BitirmeProjesi.Controllers
         }
 
         [NonAction]
-        public static bool CreateGroupMember(int groupid, int userid,bool isAdmin)
+        public static bool CreateGroupMember(int groupid, int userid, bool isAdmin)
         {
             using (LogRegDBEntities1 innerContext = new LogRegDBEntities1())
             {
@@ -140,7 +140,7 @@ namespace BitirmeProjesi.Controllers
                         group.MemberCount++;
                         var groupMember = new GroupMember { CreateDate = System.DateTime.Now.ToLongDateString(), User = user, Group = group, GroupId = group.GroupId, UserId = user.UserId, IsAdmin = false, IsApproved = false };
                         if (isAdmin == true)
-                        { 
+                        {
                             groupMember.IsAdmin = true;
                             groupMember.IsApproved = true;
                         }

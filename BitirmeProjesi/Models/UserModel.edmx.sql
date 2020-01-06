@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 12/13/2019 17:29:32
+-- Date Created: 01/06/2020 17:32:13
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -65,6 +65,9 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_UserConnection]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Connections] DROP CONSTRAINT [FK_UserConnection];
 GO
+IF OBJECT_ID(N'[dbo].[FK_GroupChatGroupChatMessage]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[GroupChatMessages] DROP CONSTRAINT [FK_GroupChatGroupChatMessage];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -105,6 +108,9 @@ IF OBJECT_ID(N'[dbo].[GroupChats]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[Connections]', 'U') IS NOT NULL
     DROP TABLE [dbo].[Connections];
+GO
+IF OBJECT_ID(N'[dbo].[GroupChatMessages]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[GroupChatMessages];
 GO
 IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RoleUser];
@@ -187,6 +193,7 @@ CREATE TABLE [dbo].[Groups] (
     [GroupId] int IDENTITY(1,1) NOT NULL,
     [CreateDate] datetime  NOT NULL,
     [GroupDescription] nvarchar(max)  NOT NULL,
+    [GroupType] nvarchar(max)  NOT NULL,
     [MemberCount] int  NULL,
     [IsPublic] bit  NOT NULL,
     [GroupName] nvarchar(max)  NOT NULL,
