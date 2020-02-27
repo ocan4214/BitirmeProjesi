@@ -19,8 +19,10 @@
     <EntitySet Name="GroupChats" EntityType="LogRegDBModel.Store.GroupChats" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Connections" EntityType="LogRegDBModel.Store.Connections" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="GroupChatMessages" EntityType="LogRegDBModel.Store.GroupChatMessages" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Events" EntityType="LogRegDBModel.Store.Events" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RoleUser" EntityType="LogRegDBModel.Store.RoleUser" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EventGroupMember" EntityType="LogRegDBModel.Store.EventGroupMember" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserPost" Association="LogRegDBModel.Store.FK_UserPost">
       <End Role="User" EntitySet="Users" />
       <End Role="Post" EntitySet="Posts" />
@@ -88,6 +90,18 @@
     <AssociationSet Name="GroupChatGroupChatMessage" Association="LogRegDBModel.Store.GroupChatGroupChatMessage">
       <End Role="GroupChat" EntitySet="GroupChats" />
       <End Role="GroupChatMessage" EntitySet="GroupChatMessages" />
+    </AssociationSet>
+    <AssociationSet Name="GroupEvent" Association="LogRegDBModel.Store.GroupEvent">
+      <End Role="Group" EntitySet="Groups" />
+      <End Role="Event" EntitySet="Events" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventGroupMember_Event" Association="LogRegDBModel.Store.FK_EventGroupMember_Event">
+      <End Role="Event" EntitySet="Events" />
+      <End Role="EventGroupMember" EntitySet="EventGroupMember" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EventGroupMember_GroupMember" Association="LogRegDBModel.Store.FK_EventGroupMember_GroupMember">
+      <End Role="GroupMember" EntitySet="GroupMembers" />
+      <End Role="EventGroupMember" EntitySet="EventGroupMember" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Posts">
@@ -229,6 +243,20 @@
     <Property Name="Username" Type="nvarchar(max)" Nullable="false" />
     <Property Name="GroupChatId" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EventCreateDate" Type="datetime" Nullable="false" />
+    <Property Name="EventUpdateDate" Type="datetime" Nullable="false" />
+    <Property Name="EventDefinition" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EventTopic" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EventLocation" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EventBeginDate" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EventThumbnail" Type="varbinary(max)" Nullable="false" />
+    <Property Name="EventGroup" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="RoleUser">
     <Key>
       <PropertyRef Name="Roles_RoleId" />
@@ -244,6 +272,14 @@
     </Key>
     <Property Name="Friends_FriendId" Type="int" Nullable="false" />
     <Property Name="Users_UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EventGroupMember">
+    <Key>
+      <PropertyRef Name="Events_EventId" />
+      <PropertyRef Name="GroupMembers_GroupMemberId" />
+    </Key>
+    <Property Name="Events_EventId" Type="int" Nullable="false" />
+    <Property Name="GroupMembers_GroupMemberId" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FK_UserPost">
     <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
@@ -401,6 +437,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="GroupEvent">
+    <End Role="Group" Type="LogRegDBModel.Store.Groups" Multiplicity="1" />
+    <End Role="Event" Type="LogRegDBModel.Store.Events" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Group">
+        <PropertyRef Name="GroupId" />
+      </Principal>
+      <Dependent Role="Event">
+        <PropertyRef Name="EventGroup" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_RoleUser_Role">
     <End Role="Role" Type="LogRegDBModel.Store.Roles" Multiplicity="1" />
     <End Role="RoleUser" Type="LogRegDBModel.Store.RoleUser" Multiplicity="*" />
@@ -446,6 +494,30 @@
       </Principal>
       <Dependent Role="FriendUser">
         <PropertyRef Name="Users_UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventGroupMember_Event">
+    <End Role="Event" Type="LogRegDBModel.Store.Events" Multiplicity="1" />
+    <End Role="EventGroupMember" Type="LogRegDBModel.Store.EventGroupMember" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Event">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="EventGroupMember">
+        <PropertyRef Name="Events_EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EventGroupMember_GroupMember">
+    <End Role="EventGroupMember" Type="LogRegDBModel.Store.EventGroupMember" Multiplicity="*" />
+    <End Role="GroupMember" Type="LogRegDBModel.Store.GroupMembers" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="GroupMember">
+        <PropertyRef Name="GroupMemberId" />
+      </Principal>
+      <Dependent Role="EventGroupMember">
+        <PropertyRef Name="GroupMembers_GroupMemberId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -526,6 +598,15 @@
           <AssociationSet Name="GroupChatGroupChatMessage" Association="LogRegDBModel.GroupChatGroupChatMessage">
             <End Role="GroupChat" EntitySet="GroupChats" />
             <End Role="GroupChatMessage" EntitySet="GroupChatMessages" />
+          </AssociationSet>
+          <EntitySet Name="Events" EntityType="LogRegDBModel.Event" />
+          <AssociationSet Name="GroupEvent" Association="LogRegDBModel.GroupEvent">
+            <End Role="Group" EntitySet="Groups" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="EventGroupMember" Association="LogRegDBModel.EventGroupMember">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="GroupMember" EntitySet="GroupMembers" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Post">
@@ -649,6 +730,7 @@
           <NavigationProperty Name="User" Relationship="LogRegDBModel.UserGroup" FromRole="Group" ToRole="User" />
           <Property Name="OwnerId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GroupChats" Relationship="LogRegDBModel.GroupGroupChat" FromRole="Group" ToRole="GroupChat" />
+          <NavigationProperty Name="Events" Relationship="LogRegDBModel.GroupEvent" FromRole="Group" ToRole="Event" />
         </EntityType>
         <EntityType Name="GroupThread">
           <Key>
@@ -699,6 +781,7 @@
           <NavigationProperty Name="GroupMessages" Relationship="LogRegDBModel.GroupMemberGroupMessage" FromRole="GroupMember" ToRole="GroupMessage" />
           <NavigationProperty Name="Group" Relationship="LogRegDBModel.GroupGroupMember" FromRole="GroupMember" ToRole="Group" />
           <Property Name="GroupId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Events" Relationship="LogRegDBModel.EventGroupMember" FromRole="GroupMember" ToRole="Event" />
         </EntityType>
         <Association Name="UserGroupMember">
           <End Type="LogRegDBModel.User" Role="User" Multiplicity="1" />
@@ -842,6 +925,38 @@
               <PropertyRef Name="GroupChatId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventCreateDate" Type="DateTime" Nullable="false" />
+          <Property Name="EventUpdateDate" Type="DateTime" Nullable="false" />
+          <Property Name="EventDefinition" Type="String" Nullable="false" />
+          <Property Name="EventTopic" Type="String" Nullable="false" />
+          <Property Name="EventLocation" Type="String" Nullable="false" />
+          <Property Name="EventBeginDate" Type="String" Nullable="false" />
+          <Property Name="EventThumbnail" Type="Binary" Nullable="false" />
+          <NavigationProperty Name="Group" Relationship="LogRegDBModel.GroupEvent" FromRole="Event" ToRole="Group" />
+          <Property Name="EventGroup" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.EventGroupMember" FromRole="Event" ToRole="GroupMember" />
+        </EntityType>
+        <Association Name="GroupEvent">
+          <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="1" />
+          <End Type="LogRegDBModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Group">
+              <PropertyRef Name="GroupId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="EventGroup" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EventGroupMember">
+          <End Type="LogRegDBModel.Event" Role="Event" Multiplicity="*" />
+          <End Type="LogRegDBModel.GroupMember" Role="GroupMember" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -999,6 +1114,21 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Events">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.Event)">
+        <MappingFragment StoreEntitySet="Events">
+          <ScalarProperty Name="EventId" ColumnName="EventId" />
+          <ScalarProperty Name="EventCreateDate" ColumnName="EventCreateDate" />
+          <ScalarProperty Name="EventUpdateDate" ColumnName="EventUpdateDate" />
+          <ScalarProperty Name="EventDefinition" ColumnName="EventDefinition" />
+          <ScalarProperty Name="EventTopic" ColumnName="EventTopic" />
+          <ScalarProperty Name="EventLocation" ColumnName="EventLocation" />
+          <ScalarProperty Name="EventBeginDate" ColumnName="EventBeginDate" />
+          <ScalarProperty Name="EventThumbnail" ColumnName="EventThumbnail" />
+          <ScalarProperty Name="EventGroup" ColumnName="EventGroup" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <AssociationSetMapping Name="RoleUser" TypeName="LogRegDBModel.RoleUser" StoreEntitySet="RoleUser">
       <EndProperty Name="Role">
         <ScalarProperty Name="RoleId" ColumnName="Roles_RoleId" />
@@ -1029,6 +1159,14 @@
       </EndProperty>
       <EndProperty Name="User">
         <ScalarProperty Name="UserId" ColumnName="Users_UserId" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="EventGroupMember" TypeName="LogRegDBModel.EventGroupMember" StoreEntitySet="EventGroupMember">
+      <EndProperty Name="Event">
+        <ScalarProperty Name="EventId" ColumnName="Events_EventId" />
+      </EndProperty>
+      <EndProperty Name="GroupMember">
+        <ScalarProperty Name="GroupMemberId" ColumnName="GroupMembers_GroupMemberId" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

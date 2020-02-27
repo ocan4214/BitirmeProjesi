@@ -20,6 +20,7 @@ namespace BitirmeProjesi.Models
             this.GroupThreads = new HashSet<GroupThread>();
             this.GroupMembers = new HashSet<GroupMember>();
             this.GroupChats = new HashSet<GroupChat>();
+            this.Events = new HashSet<Event>();
         }
     
         public int GroupId { get; set; }
@@ -39,5 +40,7 @@ namespace BitirmeProjesi.Models
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupChat> GroupChats { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Event> Events { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 01/06/2020 17:32:13
+-- Date Created: 02/27/2020 22:00:12
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -262,6 +262,20 @@ CREATE TABLE [dbo].[GroupChatMessages] (
 );
 GO
 
+-- Creating table 'Events'
+CREATE TABLE [dbo].[Events] (
+    [EventId] int IDENTITY(1,1) NOT NULL,
+    [EventCreateDate] datetime  NOT NULL,
+    [EventUpdateDate] datetime  NOT NULL,
+    [EventDefinition] nvarchar(max)  NOT NULL,
+    [EventTopic] nvarchar(max)  NOT NULL,
+    [EventLocation] nvarchar(max)  NOT NULL,
+    [EventBeginDate] nvarchar(max)  NOT NULL,
+    [EventThumbnail] varbinary(max)  NOT NULL,
+    [EventGroup] int  NOT NULL
+);
+GO
+
 -- Creating table 'RoleUser'
 CREATE TABLE [dbo].[RoleUser] (
     [Roles_RoleId] int  NOT NULL,
@@ -273,6 +287,13 @@ GO
 CREATE TABLE [dbo].[FriendUser] (
     [Friends_FriendId] int  NOT NULL,
     [Users_UserId] int  NOT NULL
+);
+GO
+
+-- Creating table 'EventGroupMember'
+CREATE TABLE [dbo].[EventGroupMember] (
+    [Events_EventId] int  NOT NULL,
+    [GroupMembers_GroupMemberId] int  NOT NULL
 );
 GO
 
@@ -358,6 +379,12 @@ ADD CONSTRAINT [PK_GroupChatMessages]
     PRIMARY KEY CLUSTERED ([ChatMessageId] ASC);
 GO
 
+-- Creating primary key on [EventId] in table 'Events'
+ALTER TABLE [dbo].[Events]
+ADD CONSTRAINT [PK_Events]
+    PRIMARY KEY CLUSTERED ([EventId] ASC);
+GO
+
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
 ALTER TABLE [dbo].[RoleUser]
 ADD CONSTRAINT [PK_RoleUser]
@@ -368,6 +395,12 @@ GO
 ALTER TABLE [dbo].[FriendUser]
 ADD CONSTRAINT [PK_FriendUser]
     PRIMARY KEY CLUSTERED ([Friends_FriendId], [Users_UserId] ASC);
+GO
+
+-- Creating primary key on [Events_EventId], [GroupMembers_GroupMemberId] in table 'EventGroupMember'
+ALTER TABLE [dbo].[EventGroupMember]
+ADD CONSTRAINT [PK_EventGroupMember]
+    PRIMARY KEY CLUSTERED ([Events_EventId], [GroupMembers_GroupMemberId] ASC);
 GO
 
 -- --------------------------------------------------
@@ -615,6 +648,45 @@ GO
 CREATE INDEX [IX_FK_GroupChatGroupChatMessage]
 ON [dbo].[GroupChatMessages]
     ([GroupChatId]);
+GO
+
+-- Creating foreign key on [EventGroup] in table 'Events'
+ALTER TABLE [dbo].[Events]
+ADD CONSTRAINT [FK_GroupEvent]
+    FOREIGN KEY ([EventGroup])
+    REFERENCES [dbo].[Groups]
+        ([GroupId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_GroupEvent'
+CREATE INDEX [IX_FK_GroupEvent]
+ON [dbo].[Events]
+    ([EventGroup]);
+GO
+
+-- Creating foreign key on [Events_EventId] in table 'EventGroupMember'
+ALTER TABLE [dbo].[EventGroupMember]
+ADD CONSTRAINT [FK_EventGroupMember_Event]
+    FOREIGN KEY ([Events_EventId])
+    REFERENCES [dbo].[Events]
+        ([EventId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [GroupMembers_GroupMemberId] in table 'EventGroupMember'
+ALTER TABLE [dbo].[EventGroupMember]
+ADD CONSTRAINT [FK_EventGroupMember_GroupMember]
+    FOREIGN KEY ([GroupMembers_GroupMemberId])
+    REFERENCES [dbo].[GroupMembers]
+        ([GroupMemberId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_EventGroupMember_GroupMember'
+CREATE INDEX [IX_FK_EventGroupMember_GroupMember]
+ON [dbo].[EventGroupMember]
+    ([GroupMembers_GroupMemberId]);
 GO
 
 -- --------------------------------------------------

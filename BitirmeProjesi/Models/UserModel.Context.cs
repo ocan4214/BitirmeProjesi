@@ -38,5 +38,6 @@ namespace BitirmeProjesi.Models
         public virtual DbSet<GroupChat> GroupChats { get; set; }
         public virtual DbSet<Connection> Connections { get; set; }
         public virtual DbSet<GroupChatMessage> GroupChatMessages { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
     }
 }

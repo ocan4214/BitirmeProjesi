@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="d6751b4d7f1c4515a96c744833607719" Name="Diagram1" ZoomLevel="98">
         <EntityTypeShape EntityType="LogRegDBModel.Post" Width="1.5" PointX="5.25" PointY="0.625" />
-        <EntityTypeShape EntityType="LogRegDBModel.User" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="LogRegDBModel.User" Width="1.5" PointX="0.5" PointY="0.875" />
         <AssociationConnector Association="LogRegDBModel.FK_UserPost" />
         <EntityTypeShape EntityType="LogRegDBModel.Role" Width="1.5" PointX="10" PointY="2.5" IsExpanded="true" />
         <AssociationConnector Association="LogRegDBModel.RoleUser" />
@@ -20,7 +20,7 @@
         <EntityTypeShape EntityType="LogRegDBModel.GroupThread" Width="1.5" PointX="8.75" PointY="4.875" IsExpanded="true" />
         <AssociationConnector Association="LogRegDBModel.GroupThreadRelation" />
         <EntityTypeShape EntityType="LogRegDBModel.GroupMessage" Width="1.5" PointX="10.875" PointY="4.875" />
-        <EntityTypeShape EntityType="LogRegDBModel.GroupMember" Width="1.5" PointX="10.5" PointY="8" />
+        <EntityTypeShape EntityType="LogRegDBModel.GroupMember" Width="1.5" PointX="10.5" PointY="8" IsExpanded="true" />
         <AssociationConnector Association="LogRegDBModel.UserGroupMember" />
         <AssociationConnector Association="LogRegDBModel.GroupMemberGroupMessage" />
         <AssociationConnector Association="LogRegDBModel.GroupThreadGroupMessage" />
@@ -33,6 +33,9 @@
         <AssociationConnector Association="LogRegDBModel.FK_UserConnection" />
         <EntityTypeShape EntityType="LogRegDBModel.GroupChatMessage" Width="1.5" PointX="8.375" PointY="11.875" />
         <AssociationConnector Association="LogRegDBModel.GroupChatGroupChatMessage" />
+        <EntityTypeShape EntityType="LogRegDBModel.Event" Width="1.5" PointX="13.875" PointY="8.125" />
+        <AssociationConnector Association="LogRegDBModel.GroupEvent" />
+        <AssociationConnector Association="LogRegDBModel.EventGroupMember" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
