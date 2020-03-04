@@ -18,6 +18,7 @@ namespace BitirmeProjesi.Models
         public Event()
         {
             this.GroupMembers = new HashSet<GroupMember>();
+            this.EventNews = new HashSet<EventNews>();
         }
     
         public int EventId { get; set; }
@@ -33,5 +34,7 @@ namespace BitirmeProjesi.Models
         public virtual Group Group { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GroupMember> GroupMembers { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EventNews> EventNews { get; set; }
     }
 }

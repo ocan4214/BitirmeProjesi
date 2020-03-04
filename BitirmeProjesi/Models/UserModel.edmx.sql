@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 02/27/2020 22:00:12
+-- Date Created: 03/04/2020 14:09:38
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -68,6 +68,15 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_GroupChatGroupChatMessage]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[GroupChatMessages] DROP CONSTRAINT [FK_GroupChatGroupChatMessage];
 GO
+IF OBJECT_ID(N'[dbo].[FK_GroupEvent]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Events] DROP CONSTRAINT [FK_GroupEvent];
+GO
+IF OBJECT_ID(N'[dbo].[FK_EventGroupMember_Event]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[EventGroupMember] DROP CONSTRAINT [FK_EventGroupMember_Event];
+GO
+IF OBJECT_ID(N'[dbo].[FK_EventGroupMember_GroupMember]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[EventGroupMember] DROP CONSTRAINT [FK_EventGroupMember_GroupMember];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -112,11 +121,17 @@ GO
 IF OBJECT_ID(N'[dbo].[GroupChatMessages]', 'U') IS NOT NULL
     DROP TABLE [dbo].[GroupChatMessages];
 GO
+IF OBJECT_ID(N'[dbo].[Events]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Events];
+GO
 IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RoleUser];
 GO
 IF OBJECT_ID(N'[dbo].[FriendUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[FriendUser];
+GO
+IF OBJECT_ID(N'[dbo].[EventGroupMember]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[EventGroupMember];
 GO
 
 -- --------------------------------------------------
@@ -174,7 +189,8 @@ CREATE TABLE [dbo].[UploadFiles] (
     [UploadFileId] int IDENTITY(1,1) NOT NULL,
     [UploadContent] varbinary(max)  NOT NULL,
     [UploadFileType] nvarchar(max)  NOT NULL,
-    [Post_PostId] int  NOT NULL
+    [Post_PostId] int  NOT NULL,
+    [EventNewsUploadFile_UploadFile_EventNewsId] int  NOT NULL
 );
 GO
 
@@ -273,6 +289,16 @@ CREATE TABLE [dbo].[Events] (
     [EventBeginDate] nvarchar(max)  NOT NULL,
     [EventThumbnail] varbinary(max)  NOT NULL,
     [EventGroup] int  NOT NULL
+);
+GO
+
+-- Creating table 'EventNews'
+CREATE TABLE [dbo].[EventNews] (
+    [EventNewsId] int IDENTITY(1,1) NOT NULL,
+    [EventMessage] nvarchar(max)  NOT NULL,
+    [EventNewsTopic] nvarchar(max)  NOT NULL,
+    [CreateDate] datetime  NOT NULL,
+    [EventId] int  NOT NULL
 );
 GO
 
@@ -383,6 +409,12 @@ GO
 ALTER TABLE [dbo].[Events]
 ADD CONSTRAINT [PK_Events]
     PRIMARY KEY CLUSTERED ([EventId] ASC);
+GO
+
+-- Creating primary key on [EventNewsId] in table 'EventNews'
+ALTER TABLE [dbo].[EventNews]
+ADD CONSTRAINT [PK_EventNews]
+    PRIMARY KEY CLUSTERED ([EventNewsId] ASC);
 GO
 
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
@@ -687,6 +719,36 @@ GO
 CREATE INDEX [IX_FK_EventGroupMember_GroupMember]
 ON [dbo].[EventGroupMember]
     ([GroupMembers_GroupMemberId]);
+GO
+
+-- Creating foreign key on [EventId] in table 'EventNews'
+ALTER TABLE [dbo].[EventNews]
+ADD CONSTRAINT [FK_EventEventNews]
+    FOREIGN KEY ([EventId])
+    REFERENCES [dbo].[Events]
+        ([EventId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_EventEventNews'
+CREATE INDEX [IX_FK_EventEventNews]
+ON [dbo].[EventNews]
+    ([EventId]);
+GO
+
+-- Creating foreign key on [EventNewsUploadFile_UploadFile_EventNewsId] in table 'UploadFiles'
+ALTER TABLE [dbo].[UploadFiles]
+ADD CONSTRAINT [FK_EventNewsUploadFile]
+    FOREIGN KEY ([EventNewsUploadFile_UploadFile_EventNewsId])
+    REFERENCES [dbo].[EventNews]
+        ([EventNewsId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_EventNewsUploadFile'
+CREATE INDEX [IX_FK_EventNewsUploadFile]
+ON [dbo].[UploadFiles]
+    ([EventNewsUploadFile_UploadFile_EventNewsId]);
 GO
 
 -- --------------------------------------------------

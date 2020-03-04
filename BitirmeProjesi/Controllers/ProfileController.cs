@@ -21,15 +21,15 @@ namespace BitirmeProjesi.Controllers
         [Authorize(Roles = "Admin,Member")]
         public ActionResult ProfilePage(int? id)
         {
-            ViewBag.Message2 = User.Identity.Name;
+           
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Profile profile = db.Profiles.Find(id);
+            var userprofile = db.Users.Find(id).Profile;
             
-            ProfilePageViewModel ViewModel = new ProfilePageViewModel { profileM = profile };
-            if (profile == null)
+            ProfilePageViewModel ViewModel = new ProfilePageViewModel { profileM = userprofile };
+            if (userprofile == null)
             {
 
                 return HttpNotFound();
@@ -42,6 +42,7 @@ namespace BitirmeProjesi.Controllers
         {
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
 
+            //Bu sorgu değişebiliri gereksiz olabilir s
             if (SessionManagement.isCurrentUser(Convert.ToInt32(User.Identity.Name), uProfile.User.UserId))
             {
                 if (ModelState.IsValid)

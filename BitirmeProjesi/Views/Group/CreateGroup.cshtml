@@ -66,5 +66,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Profile","ProfilePage","Profile",new { id = Convert.ToInt32(User.Identity.Name)},null)
 </div>

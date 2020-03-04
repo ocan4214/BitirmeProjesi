@@ -36,6 +36,9 @@
         <EntityTypeShape EntityType="LogRegDBModel.Event" Width="1.5" PointX="13.875" PointY="8.125" />
         <AssociationConnector Association="LogRegDBModel.GroupEvent" />
         <AssociationConnector Association="LogRegDBModel.EventGroupMember" />
+        <EntityTypeShape EntityType="LogRegDBModel.EventNews" Width="1.5" PointX="16.125" PointY="10" />
+        <AssociationConnector Association="LogRegDBModel.EventEventNews" />
+        <AssociationConnector Association="LogRegDBModel.EventNewsUploadFile" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
