@@ -20,29 +20,6 @@
             <h4>Event</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.EventCreateDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.EventCreateDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EventCreateDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.EventUpdateDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.EventUpdateDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EventUpdateDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.EventDefinition, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.EventDefinition, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EventDefinition, "", new { @class = "text-danger" })
-                </div>
-            </div>
 
             <div class="form-group">
                 @Html.LabelFor(model => model.EventTopic, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -53,10 +30,10 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.EventLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.LabelFor(model => model.EventDefinition, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
-                    @Html.EditorFor(model => model.EventLocation, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EventLocation, "", new { @class = "text-danger" })
+                    @Html.TextAreaFor(model => model.EventDefinition, 5, 55, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EventDefinition, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -68,6 +45,17 @@
                 </div>
             </div>
 
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.EventLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EventLocation, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EventLocation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
             <div class="form-group">
                 @Html.LabelFor(model => model.EventThumbnail, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -76,7 +64,7 @@
                 </div>
             </div>
 
-            
+
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -95,17 +83,84 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/modernizr")
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPuj7Wneantz7-mPaldVx7pyxue_JEoOM&callback=initMap"
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPuj7Wneantz7-mPaldVx7pyxue_JEoOM&libraries=places&callback=initMap"
             async defer></script>
     <script>
         let map;
-        function initMap() {
+        let uheremarker;
+        let service;
+        let pos;
+        function initMap(){
             map = new google.maps.Map(document.getElementById("mapEvent"),
                 {
-                center: { lat: -37.397, lng: 150.644 },
-                zoom: 4,
-            });
+                    center: { lat: 39.93053830818478, lng: 32.85985066236938 },
+                    zoom: 9,
+                });
+
+            map.addListener( "click", function (event) { console.log(event.latLng.toString()); });
+            service = new google.maps.places.PlacesService(map);
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                        let image = {
+                            url: "@Url.Content("~/Content/MapMarkers/male.png")",
+                            size: new google.maps.Size(20, 32),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(0, 32)
+                        };
+                        uheremarker = new google.maps.Marker({
+                            position: pos,
+                            map: map,
+                            icon: image,
+                        });
+                        map.setCenter(pos);
+
+                        service.nearbySearch({
+                            location: pos, radius: '10000', keyword: ['halısaha']
+                        }, function (results, status) {
+                            if (status !== google.maps.places.PlacesServiceStatus.OK)
+                                return;
+                            createMarkers(results);
+                        });
+
+
+                    }, function () {
+                        handleLocationError(true);
+                    });
+                }
+                else {
+                    handleLocationError(false);
+                }
+            }
+            getLocation();
         }
+
+
+        function handleLocationError(browserHasGeolocation) {
+            (browserHasGeolocation) ? alert("The Geolocation service failed") : alert("Your browser does not support geolocation");
+        }
+
+        function createMarkers(places) {
+            let bounds = new google.maps.LatLngBounds();
+            if (places.length > 0) {
+                for (let i = 0, place; i<places.length; i++) {
+                    place = places[i];
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        title: place.name,
+                        position: place.geometry.location,
+                    })
+                    bounds.extend(place.geometry.location);
+                }
+                map.fitBounds(bounds);
+            }
+            else
+                return;
+        }
+
+
+
     </script>
 
 

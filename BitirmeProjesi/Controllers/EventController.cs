@@ -17,11 +17,16 @@ namespace BitirmeProjesi.Controllers
 
 
         [HttpPost]
-        public ActionResult EventCreate(Event eventM)
+        public ActionResult EventCreate([Bind(Exclude= "EventCreateDate,EventUpdateDate,EventId")]Event eventM)
         {
             return View();
         }
 
+
+
+
+
+        
 
     }
 }
