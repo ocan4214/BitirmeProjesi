@@ -195,6 +195,7 @@
     <Compile Include="Models\EventNews.cs">
       <DependentUpon>UserModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Extended\Event.cs" />
     <Compile Include="Models\Extended\Group.cs" />
     <Compile Include="Models\Extended\User.cs" />
     <Compile Include="Models\Friend.cs">

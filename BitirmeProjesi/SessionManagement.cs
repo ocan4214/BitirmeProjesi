@@ -15,11 +15,35 @@ namespace BitirmeProjesi
     public static class SessionManagement
     {
 
+        public static bool isGroupManager(int currentUserId,int groupId)
+        {
+            using (LogRegDBEntities1 db = new LogRegDBEntities1())
+            {
+                var user = db.Users.Find(currentUserId);
+                var group = db.Groups.Find(groupId);
+                if (user != null && group != null)
+                {
+                    var groupMember = group.GroupMembers.Where(a => a.UserId == currentUserId).First();
+                    if (groupMember != null && groupMember.IsAdmin)
+                    {
+                        return true;
+                    }
+                    else
+                        return false;
 
-        public static bool isCurrentUser(int currentUserid, int RequestingUserid)
+                }
+                else
+                    return false;
+            
+            }
+
+
+        }
+
+        public static bool isCurrentUser(int currentUserid, int requestingUserid)
         {
 
-            if (currentUserid == RequestingUserid)
+            if (currentUserid == requestingUserid)
             {
                 return true;
             }

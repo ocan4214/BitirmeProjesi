@@ -9,7 +9,10 @@
 
 @Html.Hidden("groupId", Model.groupView.GroupId)
 <div class="container">
-
+    @if(SessionManagement.isGroupManager(Convert.ToInt32(User.Identity.Name),Model.groupView.GroupId))
+    { 
+    <div>@Html.ActionLink("Create an Event", "EventCreate", "Event", null, null)</div>
+    }
     <div class="row">
         <div class="chatRooms col">
             @foreach (var room in Model.groupView.GroupChats)

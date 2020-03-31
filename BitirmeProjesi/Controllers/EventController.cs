@@ -7,6 +7,7 @@ using BitirmeProjesi.Models;
 
 namespace BitirmeProjesi.Controllers
 {
+    [Authorize]
     public class EventController : Controller
     {
         [HttpGet]
@@ -17,8 +18,12 @@ namespace BitirmeProjesi.Controllers
 
 
         [HttpPost]
-        public ActionResult EventCreate([Bind(Exclude= "EventCreateDate,EventUpdateDate,EventId")]Event eventM)
+        public ActionResult EventCreate([Bind(Exclude= "EventCreateDate,EventUpdateDate,EventId")]Event eventM,HttpPostedFileBase ThumbnailImage)
         {
+
+
+
+
             return View();
         }
 

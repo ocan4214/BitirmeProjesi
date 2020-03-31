@@ -27,7 +27,7 @@ namespace BitirmeProjesi.Models
         public string EventDefinition { get; set; }
         public string EventTopic { get; set; }
         public string EventLocation { get; set; }
-        public string EventBeginDate { get; set; }
+        public System.DateTime EventBeginDate { get; set; }
         public byte[] EventThumbnail { get; set; }
         public int EventGroup { get; set; }
     
