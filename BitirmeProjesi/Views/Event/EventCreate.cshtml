@@ -145,11 +145,21 @@
             if (places.length > 0) {
                 for (let i = 0, place; i<places.length; i++) {
                     place = places[i];
-                    var marker = new google.maps.Marker({
-                        map: map,
-                        title: place.name,
-                        position: place.geometry.location,
-                    })
+                    var infowindow = new google.maps.InfoWindow();
+                    service.getDetails({ placeId: place.place_id }, function (placef, status) {
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            var marker = new google.maps.Marker({
+                                map: map,
+                                title: placef.name,
+                                position: placef.geometry.location,
+                            });
+                            google.maps.event.addListener(marker, "click", function () {
+                                infowindow.setContent('<div><strong>' + placef.name + '</strong><br>' + 'Phone Number: ' + placef.formatted_phone_number + '<br>' + placef.formatted_address + '</div');
+                                infowindow.open(map, this);
+                                $("#EventLocation").val(placef.formatted_address);
+                            });
+                        }
+                    });
                     bounds.extend(place.geometry.location);
                 }
                 map.fitBounds(bounds);
@@ -157,7 +167,6 @@
             else
                 return;
         }
-
 
 
     </script>
