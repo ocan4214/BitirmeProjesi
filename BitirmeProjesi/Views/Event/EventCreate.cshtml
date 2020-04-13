@@ -1,5 +1,4 @@
 ﻿@model BitirmeProjesi.Models.Event
-
 @{
     Layout = null;
 }
@@ -12,7 +11,8 @@
     <title>View</title>
 </head>
 <body>
-    @using (Html.BeginForm())
+    
+    @using (Html.BeginForm("EventCreate","Event",new { groupid= ViewBag.groupid  },FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
