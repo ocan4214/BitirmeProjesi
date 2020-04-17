@@ -35,7 +35,19 @@
 
 
         </div>
+        <div class="col">
+            <div id="Events">
+                @foreach (var eventP in Model.groupView.Events)
+                {
+                    <div>@eventP.EventTopic, Begin Date: @eventP.EventBeginDate.ToLongDateString() </div>
+                    <img id="ThumbnailEvent"  src="@Url.Action("getEventThumbnail","Event",new { id = eventP.EventId})" class="EventThumbnail" width:75px />
+                    <div>@Html.ActionLink(eventP.EventTopic, "EventPage", "Event", new { eventid = eventP.EventId }, null);</div>
+                }
+            </div>
+        </div>
+
     </div>
+    
 </div>
 
 <div>@Html.ActionLink("Back to Profile", "ProfilePage", "Profile", new { id = Convert.ToInt32(User.Identity.Name) }, null)</div>

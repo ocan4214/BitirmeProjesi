@@ -1,0 +1,25 @@
+﻿@model BitirmeProjesi.Models.Event
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EventPage</title>
+</head>
+<body>
+    <h4>@Model.EventTopic</h4>
+    <div>
+        
+      
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

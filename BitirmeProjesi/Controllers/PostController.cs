@@ -76,16 +76,10 @@ namespace BitirmeProjesi.Controllers
 
         public ActionResult getPostImage(int id)
         {
-
-
             using (LogRegDBEntities1 db = new LogRegDBEntities1())
             {
                 var image = db.UploadFiles.Find(id);
-
-
-
                 return File(image.UploadContent, "image/jpg");
-
             }
         }
 

@@ -59,11 +59,40 @@ namespace BitirmeProjesi.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult EventPage(int eventid)
+        {
+
+            LogRegDBEntities1 db = new LogRegDBEntities1();
+
+            
+
+            return View(db.Events.Find(eventid));
+        }
 
 
 
+        public ActionResult getEventThumbnail(int id)
+        {
+            using (LogRegDBEntities1 db = new LogRegDBEntities1())
+            {
+                var image = db.Events.Find(id);
 
-        
+
+
+                if (image == null)
+                {
+
+                    return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
+
+                }
+
+                return File(image.EventThumbnail, "image/jpg");
+            }
+        }
+
+
+
 
     }
 }
