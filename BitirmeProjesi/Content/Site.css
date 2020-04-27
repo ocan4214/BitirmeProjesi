@@ -90,3 +90,13 @@ margin:10px 0;
     .avatar:hover {
         transform: scale(2.5);
     }
+
+
+.EventThumbnailPage{
+    max-height:480px;
+    max-width:1080px;
+    width:800px;
+    height:260px;
+
+
+}

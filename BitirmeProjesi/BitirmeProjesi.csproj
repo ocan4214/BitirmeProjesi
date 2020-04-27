@@ -254,6 +254,7 @@
       <DependentUpon>UserModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\UsersRoleProvider.cs" />
+    <Compile Include="Models\ViewModel\EventPageViewModel.cs" />
     <Compile Include="Models\ViewModel\GroupPageViewModel.cs" />
     <Compile Include="Models\ViewModel\ProfilePageViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

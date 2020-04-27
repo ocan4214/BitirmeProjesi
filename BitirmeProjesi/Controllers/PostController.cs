@@ -19,58 +19,43 @@ namespace BitirmeProjesi.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PostProfile(int id, ProfilePageViewModel post, HttpPostedFileBase[] UploadedFile)
         {
-            
             if (SessionManagement.isCurrentUser(Convert.ToInt32(User.Identity.Name), id))
             {
-
                 if (ModelState.IsValid)
                 {
-
                     post.postM.UploadFiles = new List<UploadFile>();
-
                     foreach (HttpPostedFileBase file in UploadedFile)
                     {
                         if (file != null && file.ContentLength > 0)
                         {
-
                             var ToDbFile = new UploadFile
                             {
                                 UploadFileType = file.ContentType,
                                 Post = post.postM
-
                             };
-
                             using (var reader = new BinaryReader(file.InputStream))
                             {
                                 ToDbFile.UploadContent = reader.ReadBytes(file.ContentLength);
-
                             }
                             db.UploadFiles.Add(ToDbFile);
                         }
-
-
-
                     }
                     post.postM.DateofPost = DateTime.Now;
                     post.postM.UserId = id;
-
                     db.Posts.Add(post.postM);
                     db.SaveChanges();
                     return RedirectToAction("ProfilePage", "Profile", new { id = id });
-
                 }
                 else
                 {
                     ViewBag.Message3 = "Posting Failed";
                     return RedirectToAction("ProfilePage", "Profile", new { id = id });
                 }
-
             }
             else
             {
                 ViewBag.Message3 = "You are not the current user of this account";
                 return RedirectToAction("ProfilePage", "Profile", new { id = id });
-
             }
         }
 
