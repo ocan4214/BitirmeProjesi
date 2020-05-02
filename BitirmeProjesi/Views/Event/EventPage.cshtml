@@ -23,6 +23,8 @@
             </div>
         </div>
     </div>
+    @if(SessionManagement.isGroupManager(Convert.ToInt32(User.Identity.Name),Model.eventPageModel.Group.GroupId))
+    { 
     <div class="row">
         <div class="container">
             @using (Html.BeginForm("PostEventNews", "Event", new { eventid = Model.eventPageModel.EventId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -53,5 +55,5 @@
 
         </div>
     </div>
-
+    }
 </div>

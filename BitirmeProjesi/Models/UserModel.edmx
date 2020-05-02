@@ -21,10 +21,10 @@
     <EntitySet Name="GroupChatMessages" EntityType="LogRegDBModel.Store.GroupChatMessages" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="Events" EntityType="LogRegDBModel.Store.Events" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="EventNews" EntityType="LogRegDBModel.Store.EventNews" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="EventNewsFiles" EntityType="LogRegDBModel.Store.EventNewsFiles" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="RoleUser" EntityType="LogRegDBModel.Store.RoleUser" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="FriendUser" EntityType="LogRegDBModel.Store.FriendUser" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="EventGroupMember" EntityType="LogRegDBModel.Store.EventGroupMember" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="EventNewsUploadFile" EntityType="LogRegDBModel.Store.EventNewsUploadFile" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserPost" Association="LogRegDBModel.Store.FK_UserPost">
       <End Role="User" EntitySet="Users" />
       <End Role="Post" EntitySet="Posts" />
@@ -109,13 +109,9 @@
       <End Role="Event" EntitySet="Events" />
       <End Role="EventNews" EntitySet="EventNews" />
     </AssociationSet>
-    <AssociationSet Name="FK_EventNewsUploadFile_UploadFile" Association="LogRegDBModel.Store.FK_EventNewsUploadFile_UploadFile">
-      <End Role="UploadFile" EntitySet="UploadFiles" />
-      <End Role="EventNewsUploadFile" EntitySet="EventNewsUploadFile" />
-    </AssociationSet>
-    <AssociationSet Name="FK_EventNewsUploadFile_EventNews" Association="LogRegDBModel.Store.FK_EventNewsUploadFile_EventNews">
+    <AssociationSet Name="EventNewsFileEventNews" Association="LogRegDBModel.Store.EventNewsFileEventNews">
+      <End Role="EventNewsFile" EntitySet="EventNewsFiles" />
       <End Role="EventNews" EntitySet="EventNews" />
-      <End Role="EventNewsUploadFile" EntitySet="EventNewsUploadFile" />
     </AssociationSet>
   </EntityContainer>
   <EntityType Name="Posts">
@@ -270,6 +266,7 @@
     <Property Name="EventBeginDate" Type="datetime" Nullable="false" />
     <Property Name="EventThumbnail" Type="varbinary(max)" Nullable="false" />
     <Property Name="EventGroup" Type="int" Nullable="false" />
+    <Property Name="EventTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="EventNews">
     <Key>
@@ -280,6 +277,14 @@
     <Property Name="EventNewsTopic" Type="nvarchar(max)" Nullable="false" />
     <Property Name="CreateDate" Type="datetime" Nullable="false" />
     <Property Name="EventId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EventNewsFiles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FileContent" Type="varbinary(max)" Nullable="false" />
+    <Property Name="EventNewsEventNewsId" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="RoleUser">
     <Key>
@@ -304,14 +309,6 @@
     </Key>
     <Property Name="Events_EventId" Type="int" Nullable="false" />
     <Property Name="GroupMembers_GroupMemberId" Type="int" Nullable="false" />
-  </EntityType>
-  <EntityType Name="EventNewsUploadFile">
-    <Key>
-      <PropertyRef Name="UploadFiles_UploadFileId" />
-      <PropertyRef Name="EventNewsUploadFile_UploadFile_EventNewsId" />
-    </Key>
-    <Property Name="UploadFiles_UploadFileId" Type="int" Nullable="false" />
-    <Property Name="EventNewsUploadFile_UploadFile_EventNewsId" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FK_UserPost">
     <End Role="User" Type="LogRegDBModel.Store.Users" Multiplicity="1" />
@@ -493,6 +490,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="EventNewsFileEventNews">
+    <End Role="EventNewsFile" Type="LogRegDBModel.Store.EventNewsFiles" Multiplicity="*" />
+    <End Role="EventNews" Type="LogRegDBModel.Store.EventNews" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="EventNews">
+        <PropertyRef Name="EventNewsId" />
+      </Principal>
+      <Dependent Role="EventNewsFile">
+        <PropertyRef Name="EventNewsEventNewsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_RoleUser_Role">
     <End Role="Role" Type="LogRegDBModel.Store.Roles" Multiplicity="1" />
     <End Role="RoleUser" Type="LogRegDBModel.Store.RoleUser" Multiplicity="*" />
@@ -562,30 +571,6 @@
       </Principal>
       <Dependent Role="EventGroupMember">
         <PropertyRef Name="GroupMembers_GroupMemberId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_EventNewsUploadFile_UploadFile">
-    <End Role="UploadFile" Type="LogRegDBModel.Store.UploadFiles" Multiplicity="1" />
-    <End Role="EventNewsUploadFile" Type="LogRegDBModel.Store.EventNewsUploadFile" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="UploadFile">
-        <PropertyRef Name="UploadFileId" />
-      </Principal>
-      <Dependent Role="EventNewsUploadFile">
-        <PropertyRef Name="UploadFiles_UploadFileId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_EventNewsUploadFile_EventNews">
-    <End Role="EventNewsUploadFile" Type="LogRegDBModel.Store.EventNewsUploadFile" Multiplicity="*" />
-    <End Role="EventNews" Type="LogRegDBModel.Store.EventNews" Multiplicity="1" />
-    <ReferentialConstraint>
-      <Principal Role="EventNews">
-        <PropertyRef Name="EventNewsId" />
-      </Principal>
-      <Dependent Role="EventNewsUploadFile">
-        <PropertyRef Name="EventNewsUploadFile_UploadFile_EventNewsId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -681,8 +666,9 @@
             <End Role="Event" EntitySet="Events" />
             <End Role="EventNews" EntitySet="EventNews" />
           </AssociationSet>
-          <AssociationSet Name="EventNewsUploadFile" Association="LogRegDBModel.EventNewsUploadFile">
-            <End Role="UploadFile" EntitySet="UploadFiles" />
+          <EntitySet Name="EventNewsFiles" EntityType="LogRegDBModel.EventNewsFile" />
+          <AssociationSet Name="EventNewsFileEventNews" Association="LogRegDBModel.EventNewsFileEventNews">
+            <End Role="EventNewsFile" EntitySet="EventNewsFiles" />
             <End Role="EventNews" EntitySet="EventNews" />
           </AssociationSet>
           </EntityContainer>
@@ -1019,6 +1005,7 @@
           <Property Name="EventGroup" Type="Int32" Nullable="false" />
           <NavigationProperty Name="GroupMembers" Relationship="LogRegDBModel.EventGroupMember" FromRole="Event" ToRole="GroupMember" />
           <NavigationProperty Name="EventNews" Relationship="LogRegDBModel.EventEventNews" FromRole="Event" ToRole="EventNews" />
+          <Property Name="EventTime" Type="DateTime" Nullable="false" />
         </EntityType>
         <Association Name="GroupEvent">
           <End Type="LogRegDBModel.Group" Role="Group" Multiplicity="1" />
@@ -1046,7 +1033,7 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" />
           <NavigationProperty Name="Event" Relationship="LogRegDBModel.EventEventNews" FromRole="EventNews" ToRole="Event" />
           <Property Name="EventId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="UploadFiles" Relationship="LogRegDBModel.EventNewsUploadFile" FromRole="EventNews" ToRole="UploadFile" />
+          <NavigationProperty Name="EventNewsFiles" Relationship="LogRegDBModel.EventNewsFileEventNews" FromRole="EventNews" ToRole="EventNewsFile" />
         </EntityType>
         <Association Name="EventEventNews">
           <End Type="LogRegDBModel.Event" Role="Event" Multiplicity="1" />
@@ -1060,9 +1047,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="EventNewsUploadFile">
-          <End Type="LogRegDBModel.UploadFile" Role="UploadFile" Multiplicity="*" />
-          <End Type="LogRegDBModel.EventNews" Role="EventNews" Multiplicity="*" />
+        <EntityType Name="EventNewsFile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileContent" Type="Binary" Nullable="false" />
+          <NavigationProperty Name="EventNew" Relationship="LogRegDBModel.EventNewsFileEventNews" FromRole="EventNewsFile" ToRole="EventNews" />
+          <Property Name="EventNewsEventNewsId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="EventNewsFileEventNews">
+          <End Type="LogRegDBModel.EventNewsFile" Role="EventNewsFile" Multiplicity="*" />
+          <End Type="LogRegDBModel.EventNews" Role="EventNews" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="EventNews">
+              <PropertyRef Name="EventNewsId" />
+            </Principal>
+            <Dependent Role="EventNewsFile">
+              <PropertyRef Name="EventNewsEventNewsId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1232,6 +1236,7 @@
           <ScalarProperty Name="EventBeginDate" ColumnName="EventBeginDate" />
           <ScalarProperty Name="EventThumbnail" ColumnName="EventThumbnail" />
           <ScalarProperty Name="EventGroup" ColumnName="EventGroup" />
+          <ScalarProperty Name="EventTime" ColumnName="EventTime" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1243,6 +1248,15 @@
           <ScalarProperty Name="EventNewsTopic" ColumnName="EventNewsTopic" />
           <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
           <ScalarProperty Name="EventId" ColumnName="EventId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EventNewsFiles">
+      <EntityTypeMapping TypeName="IsTypeOf(LogRegDBModel.EventNewsFile)">
+        <MappingFragment StoreEntitySet="EventNewsFiles">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FileContent" ColumnName="FileContent" />
+          <ScalarProperty Name="EventNewsEventNewsId" ColumnName="EventNewsEventNewsId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -1284,14 +1298,6 @@
       </EndProperty>
       <EndProperty Name="GroupMember">
         <ScalarProperty Name="GroupMemberId" ColumnName="GroupMembers_GroupMemberId" />
-      </EndProperty>
-    </AssociationSetMapping>
-    <AssociationSetMapping Name="EventNewsUploadFile" TypeName="LogRegDBModel.EventNewsUploadFile" StoreEntitySet="EventNewsUploadFile">
-      <EndProperty Name="UploadFile">
-        <ScalarProperty Name="UploadFileId" ColumnName="UploadFiles_UploadFileId" />
-      </EndProperty>
-      <EndProperty Name="EventNews">
-        <ScalarProperty Name="EventNewsId" ColumnName="EventNewsUploadFile_UploadFile_EventNewsId" />
       </EndProperty>
     </AssociationSetMapping>
   </EntityContainerMapping>

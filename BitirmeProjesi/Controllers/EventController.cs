@@ -56,7 +56,7 @@ namespace BitirmeProjesi.Controllers
                 }
             }
 
-            return View();
+            return RedirectToAction("GroupPage", "Group", new{ groupid = groupid });
         }
 
         [HttpGet]
@@ -77,6 +77,28 @@ namespace BitirmeProjesi.Controllers
         public ActionResult PostEventNews(int eventid,EventPageViewModel eventPageViewModel, HttpPostedFileBase[] UploadedFile)
         {
             LogRegDBEntities1 db = new LogRegDBEntities1();
+
+            if(ModelState.IsValid)
+            {
+                foreach(var file in UploadedFile)
+                {
+                    if(file !=null && file.ContentLength>0)
+                    {
+                        var toDBFile = new EventNewsFile();
+                        toDBFile.EventNewsEventNewsId = eventPageViewModel.eventNewsModel.EventNewsId;
+                        using (var reader = new BinaryReader(file.InputStream))
+                        {
+                            toDBFile.FileContent = reader.ReadBytes(file.ContentLength);
+                        }
+                        db.EventNewsFiles.Add(toDBFile);
+                    }
+                }
+            }
+
+            eventPageViewModel.eventNewsModel.CreateDate = DateTime.Now;
+            eventPageViewModel.eventNewsModel.EventId = eventid;
+            db.EventNews.Add(eventPageViewModel.eventNewsModel);
+            db.SaveChanges();
 
             return RedirectToAction("EventPage", "Event", new { eventid = eventid });
         }

@@ -41,7 +41,7 @@
                 {
                     <div>@eventP.EventTopic, Begin Date: @eventP.EventBeginDate.ToLongDateString() </div>
                     <img id="ThumbnailEvent"  src="@Url.Action("getEventThumbnail","Event",new { id = eventP.EventId})" width="75px"/>
-                    <div>@Html.ActionLink(eventP.EventTopic, "EventPage", "Event", new { eventid = eventP.EventId }, null);</div>
+                    <div>@Html.ActionLink(eventP.EventTopic, "EventPage", "Event", new { eventid = eventP.EventId }, null)</div>
                 }
             </div>
         </div>

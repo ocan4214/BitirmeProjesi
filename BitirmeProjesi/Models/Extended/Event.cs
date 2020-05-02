@@ -36,12 +36,17 @@ namespace BitirmeProjesi.Models
         [Display(Name = "Event Begin Date")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Begin Date Required")]
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy hh:mm}")]
         public DateTime EventBeginDate { get; set; }
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
         public DateTime EventUpdateDate { get; set; }
+
+        [Required]
+        [DataType(DataType.Time)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:H:mm}")]
+        public System.DateTime EventTime { get; set; }
 
 
     }

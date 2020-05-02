@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 04/01/2020 00:10:19
+-- Date Created: 05/02/2020 12:58:25
 -- Generated from EDMX file: C:\Users\ocan4214\source\repos\BitirmeProjesi\Models\UserModel.edmx
 -- --------------------------------------------------
 
@@ -80,8 +80,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_EventEventNews]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[EventNews] DROP CONSTRAINT [FK_EventEventNews];
 GO
-IF OBJECT_ID(N'[dbo].[FK_EventNewsUploadFile]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[UploadFiles] DROP CONSTRAINT [FK_EventNewsUploadFile];
+IF OBJECT_ID(N'[dbo].[FK_EventNewsFileEventNews]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[EventNewsFiles] DROP CONSTRAINT [FK_EventNewsFileEventNews];
 GO
 
 -- --------------------------------------------------
@@ -132,6 +132,9 @@ IF OBJECT_ID(N'[dbo].[Events]', 'U') IS NOT NULL
 GO
 IF OBJECT_ID(N'[dbo].[EventNews]', 'U') IS NOT NULL
     DROP TABLE [dbo].[EventNews];
+GO
+IF OBJECT_ID(N'[dbo].[EventNewsFiles]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[EventNewsFiles];
 GO
 IF OBJECT_ID(N'[dbo].[RoleUser]', 'U') IS NOT NULL
     DROP TABLE [dbo].[RoleUser];
@@ -296,7 +299,8 @@ CREATE TABLE [dbo].[Events] (
     [EventLocation] nvarchar(max)  NOT NULL,
     [EventBeginDate] datetime  NOT NULL,
     [EventThumbnail] varbinary(max)  NOT NULL,
-    [EventGroup] int  NOT NULL
+    [EventGroup] int  NOT NULL,
+    [EventTime] datetime  NOT NULL
 );
 GO
 
@@ -307,6 +311,14 @@ CREATE TABLE [dbo].[EventNews] (
     [EventNewsTopic] nvarchar(max)  NOT NULL,
     [CreateDate] datetime  NOT NULL,
     [EventId] int  NOT NULL
+);
+GO
+
+-- Creating table 'EventNewsFiles'
+CREATE TABLE [dbo].[EventNewsFiles] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [FileContent] varbinary(max)  NOT NULL,
+    [EventNewsEventNewsId] int  NOT NULL
 );
 GO
 
@@ -328,13 +340,6 @@ GO
 CREATE TABLE [dbo].[EventGroupMember] (
     [Events_EventId] int  NOT NULL,
     [GroupMembers_GroupMemberId] int  NOT NULL
-);
-GO
-
--- Creating table 'EventNewsUploadFile'
-CREATE TABLE [dbo].[EventNewsUploadFile] (
-    [UploadFiles_UploadFileId] int  NOT NULL,
-    [EventNewsUploadFile_UploadFile_EventNewsId] int  NOT NULL
 );
 GO
 
@@ -432,6 +437,12 @@ ADD CONSTRAINT [PK_EventNews]
     PRIMARY KEY CLUSTERED ([EventNewsId] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'EventNewsFiles'
+ALTER TABLE [dbo].[EventNewsFiles]
+ADD CONSTRAINT [PK_EventNewsFiles]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Roles_RoleId], [Users_UserId] in table 'RoleUser'
 ALTER TABLE [dbo].[RoleUser]
 ADD CONSTRAINT [PK_RoleUser]
@@ -448,12 +459,6 @@ GO
 ALTER TABLE [dbo].[EventGroupMember]
 ADD CONSTRAINT [PK_EventGroupMember]
     PRIMARY KEY CLUSTERED ([Events_EventId], [GroupMembers_GroupMemberId] ASC);
-GO
-
--- Creating primary key on [UploadFiles_UploadFileId], [EventNewsUploadFile_UploadFile_EventNewsId] in table 'EventNewsUploadFile'
-ALTER TABLE [dbo].[EventNewsUploadFile]
-ADD CONSTRAINT [PK_EventNewsUploadFile]
-    PRIMARY KEY CLUSTERED ([UploadFiles_UploadFileId], [EventNewsUploadFile_UploadFile_EventNewsId] ASC);
 GO
 
 -- --------------------------------------------------
@@ -757,28 +762,19 @@ ON [dbo].[EventNews]
     ([EventId]);
 GO
 
--- Creating foreign key on [UploadFiles_UploadFileId] in table 'EventNewsUploadFile'
-ALTER TABLE [dbo].[EventNewsUploadFile]
-ADD CONSTRAINT [FK_EventNewsUploadFile_UploadFile]
-    FOREIGN KEY ([UploadFiles_UploadFileId])
-    REFERENCES [dbo].[UploadFiles]
-        ([UploadFileId])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [EventNewsUploadFile_UploadFile_EventNewsId] in table 'EventNewsUploadFile'
-ALTER TABLE [dbo].[EventNewsUploadFile]
-ADD CONSTRAINT [FK_EventNewsUploadFile_EventNews]
-    FOREIGN KEY ([EventNewsUploadFile_UploadFile_EventNewsId])
+-- Creating foreign key on [EventNewsEventNewsId] in table 'EventNewsFiles'
+ALTER TABLE [dbo].[EventNewsFiles]
+ADD CONSTRAINT [FK_EventNewsFileEventNews]
+    FOREIGN KEY ([EventNewsEventNewsId])
     REFERENCES [dbo].[EventNews]
         ([EventNewsId])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_EventNewsUploadFile_EventNews'
-CREATE INDEX [IX_FK_EventNewsUploadFile_EventNews]
-ON [dbo].[EventNewsUploadFile]
-    ([EventNewsUploadFile_UploadFile_EventNewsId]);
+-- Creating non-clustered index for FOREIGN KEY 'FK_EventNewsFileEventNews'
+CREATE INDEX [IX_FK_EventNewsFileEventNews]
+ON [dbo].[EventNewsFiles]
+    ([EventNewsEventNewsId]);
 GO
 
 -- --------------------------------------------------

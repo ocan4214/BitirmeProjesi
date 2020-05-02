@@ -2,17 +2,15 @@
 @{
     Layout = null;
 }
-
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>View</title>
 </head>
 <body>
-    
-    @using (Html.BeginForm("EventCreate","Event",new { groupid= ViewBag.groupid  },FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+    @using (Html.BeginForm("EventCreate", "Event", new { groupid = ViewBag.groupid }, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
 
@@ -20,7 +18,6 @@
             <h4>Event</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
             <div class="form-group">
                 @Html.LabelFor(model => model.EventTopic, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -28,7 +25,6 @@
                     @Html.ValidationMessageFor(model => model.EventTopic, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.EventDefinition, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -36,7 +32,6 @@
                     @Html.ValidationMessageFor(model => model.EventDefinition, "", new { @class = "text-danger" })
                 </div>
             </div>
-
             <div class="form-group">
                 @Html.LabelFor(model => model.EventBeginDate, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-10">
@@ -44,39 +39,42 @@
                     @Html.ValidationMessageFor(model => model.EventBeginDate, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-
-
             <div class="form-group">
-                @Html.LabelFor(model => model.EventLocation, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.EventLocation, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EventLocation, "", new { @class = "text-danger" })
-                </div>
+            @Html.LabelFor(model => model.EventTime, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EventTime, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventTime, "", new { @class = "text-danger" })
             </div>
+        </div>
 
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.EventThumbnail, htmlAttributes: new { @class = "control-label col-md-2" })                                                          
-                <div class="col-md-10">
-                    <input type="file" name="ThumbnailImage" id="_EventThumbnailImage" />
-                </div>                
+        <div class="form-group">
+            @Html.LabelFor(model => model.EventLocation, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EventLocation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventLocation, "", new { @class = "text-danger" })
             </div>
+        </div>
 
 
-
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.EventThumbnail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" name="ThumbnailImage" id="_EventThumbnailImage" />
             </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
         </div>
     }
 
-
     <div id="mapEvent" style="height:500px; width:600px;"></div>
-
-
 
 
     @Styles.Render("~/Content/css")
@@ -171,9 +169,8 @@
 
     </script>
 
-
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Group Page", "GroupPage", "Group", new { groupid = ViewBag.groupid }, null)
     </div>
 </body>
 </html>
