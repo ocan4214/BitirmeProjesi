@@ -41,20 +41,16 @@ namespace BitirmeProjesi.Controllers
         public ActionResult UploadAvatar(int id, HttpPostedFileBase Avatar)
         {
             var uProfile = db.Profiles.Where(a => a.ProfileId == id).FirstOrDefault();
-
-            //Bu sorgu değişebiliri gereksiz olabilir s
             if (SessionManagement.isCurrentUser(Convert.ToInt32(User.Identity.Name), uProfile.User.UserId))
             {
                 if (ModelState.IsValid)
                 {
                     if (uProfile != null)
                     {
-
                         if (Avatar != null && Avatar.ContentLength > 0)
                         {
                             using (var reader = new System.IO.BinaryReader(Avatar.InputStream))
                             {
-
                                 var path = Path.Combine(Server.MapPath("~/App_Data/Avatars"), Avatar.FileName);
                                 Avatar.SaveAs(path);
                                 uProfile.Avatar = reader.ReadBytes(Avatar.ContentLength);
@@ -62,14 +58,12 @@ namespace BitirmeProjesi.Controllers
                             }
                             db.SaveChanges();
                         }
-
                     }
                     else
                     {
                         ViewBag.Message = "Profile id is not legit";
                         return RedirectToAction("ProfilePage", "Profile", new { id = id });
                     }
-
                 }
                 return RedirectToAction("ProfilePage", "Profile", new { id = id });
             }
@@ -78,10 +72,6 @@ namespace BitirmeProjesi.Controllers
                 ViewBag.Message = "Unauthorized";
                 return RedirectToAction("ProfilePage", "Profile", new { id = id });
             }
-
-
-
-
         }
 
         
@@ -90,14 +80,10 @@ namespace BitirmeProjesi.Controllers
         public ActionResult GetAvatar(int id)
         {
             var avatar = db.Users.Where(a => a.Profile.ProfileId == id).FirstOrDefault().Profile.Avatar;
-
             if (avatar == null)
             {
-
                 return File("C:\\Users\\ocan4214\\Desktop\\KENDİM\\Wallpapers\\9s_by_wlop-dax8mou.jpg", "image/jpg");
-
             }
-
             return File(avatar, "image/jpg");
         }
 

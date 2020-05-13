@@ -117,6 +117,15 @@ namespace BitirmeProjesi.Controllers
             }
         }
 
+        public ActionResult getEventNews(int id)
+        {
+            using (LogRegDBEntities1 db = new LogRegDBEntities1())
+            {
+                var image = db.EventNewsFiles.Find(id);
+                return File(image.FileContent, "image/jpg");
+            }
+        }
+
 
 
 

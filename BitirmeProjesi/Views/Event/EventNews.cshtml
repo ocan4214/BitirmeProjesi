@@ -1,0 +1,19 @@
+﻿@model IEnumerable<BitirmeProjesi.Models.EventNews>
+
+
+@foreach (var m in Model)
+{
+    <div class="row">
+        <div class="col-4" id="Image">
+            @foreach (var image in m.EventNewsFiles)
+            {
+                <img class="img-thumbnail" style="max-width:100%;" src=@Url.Action("getPostImage","Post",new { id = image.Id})>
+            }
+        </div>
+        <div class="col-8">
+            <div id="Timestamp" class="navbar-text">@m.CreateDate</div>
+            <div id="Topic" class="navbar-text">@m.EventNewsTopic</div>
+            <div id="Content" class="lead">@m.EventMessage</div>
+        </div>
+    </div>
+}

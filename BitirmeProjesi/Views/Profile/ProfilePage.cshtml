@@ -3,7 +3,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Profile of @Session["Username"].ToString()</h2>
 
 @foreach (var item in Model.profileM.User.GroupMembers)
 {
@@ -17,7 +17,7 @@
 }
 
         <div>
-            <h4>Profile of @Session["Username"].ToString()</h4>
+            
             
             <div id="ProfileInformation" class="container" style="padding-left:0; padding-right:50px;">
                 <!-- TODO hover şuanlık css ile oluyor onu javascript ile değiştir-->

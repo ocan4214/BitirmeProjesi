@@ -8,9 +8,9 @@
 
 
 
-<h4>@Model.eventPageModel.EventTopic</h4>
+<h4>@Model.eventPageModel.EventTopic Event</h4>
 <div class="container-fluid">
-    <div class="row" id="EventThumbnail_@Model.eventPageModel.EventTopic"><img class="EventThumbnailPage" width="800px" height="350px" src="@Url.Action("getEventThumbnail","Event",new { id = Model.eventPageModel.EventId })" /></div>
+    <div class="row" id="EventThumbnail_@Model.eventPageModel.EventTopic"><img class="rounded-pill" width="800px" height="350px" src="@Url.Action("getEventThumbnail","Event",new { id = Model.eventPageModel.EventId })" /></div>
     <div class="row">
         <div class="col-3">
             <div>
@@ -23,6 +23,12 @@
             </div>
         </div>
     </div>
+
+    @Html.Partial("~/Views/Event/EventNews.cshtml",Model.eventPageModel.EventNews)
+
+
+    <br /><br /><br /><br /><br /><br /><br />
+
     @if(SessionManagement.isGroupManager(Convert.ToInt32(User.Identity.Name),Model.eventPageModel.Group.GroupId))
     { 
     <div class="row">
