@@ -10,4 +10,4 @@ Features #<br/>
 3- Real-time chat using SignalR<br/>
 4- Create Events Based on location and sport type(under development)<br/>
 <br/>
-![SignalR](SignalR.png)
+![SignalR](SignalR.PNG)
