@@ -12,9 +12,9 @@
 <div class="container-fluid">
     <div class="row" id="EventThumbnail_@Model.eventPageModel.EventTopic"><img class="rounded-pill" width="800px" height="350px" src="@Url.Action("getEventThumbnail","Event",new { id = Model.eventPageModel.EventId })" /></div>
     <div class="row">
-        <div class="col-3">
+        <div class="col-6">
             <div>
-                <b>Event Date = @Model.eventPageModel.EventBeginDate</b>
+                <span> <b>Event Date = @Model.eventPageModel.EventBeginDate.ToShortDateString() Hour: @Model.eventPageModel.EventTime.Hour : @Model.eventPageModel.EventTime.Minute</b></span>
                 <br />
                 <b>Event Definition</b>
                 <div id="EventDefinition_@Model.eventPageModel.EventTopic">
