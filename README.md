@@ -10,8 +10,8 @@ Features #<br/>
 3- Real-time chat using SignalR<br/>
 4- Create Events Based on location and sport type(under development)<br/>
 <br/>
-Real-Time Chat
+Real-Time Chat<br/>
 ![SignalR](SignalR.PNG)
 
-Available locations based on user location
+Available locations based on user location<br/>
 ![Event](eventsistemi.PNG)
