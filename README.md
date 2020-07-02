@@ -13,5 +13,5 @@ Features #<br/>
 Real-Time Chat
 ![SignalR](SignalR.PNG)
 
-Football tournament location for event based on user's location
+Available locations based on user location
 ![Event](eventsistemi.PNG)
