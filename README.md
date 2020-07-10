@@ -1,5 +1,5 @@
 # BitirmeProjesi
-Bitirme Projem
+Sport Based Social Network developing with ASP.NET MVC
 Currently Under Development <br/>
 
 Currently working on front-end side<br/>
