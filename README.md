@@ -1,4 +1,4 @@
-# BitirmeProjesi
+# Sport Based Social Network Project For Final Project
 Sport Based Social Network developing with ASP.NET MVC
 Currently Under Development <br/>
 
